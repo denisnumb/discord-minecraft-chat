@@ -15,8 +15,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.*;
 
-import static com.denisnumb.discord_chat_mod.DiscordChatMod.jda;
-import static com.denisnumb.discord_chat_mod.DiscordChatMod.server;
+import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 
 public class DiscordEvents extends ListenerAdapter {
     private static final Gson gson = new Gson();
@@ -29,6 +28,9 @@ public class DiscordEvents extends ListenerAdapter {
 
         if (Config.logDiscordMessages)
             System.out.printf("[Discord] <%s> %s%n", event.getAuthor().getEffectiveName(), event.getMessage().getContentDisplay());
+
+        if (!isServerStarted() || server.getPlayerCount() == 0)
+            return;
 
         for (String command : prepareTellRawCommands(event.getMessage()))
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), command);
@@ -85,7 +87,7 @@ public class DiscordEvents extends ListenerAdapter {
                 int index = 0;
                 List<Message.Attachment> attachments = message.getAttachments();
                 for (var file : attachments){
-                    add(new TellRawTextComponent(file.getFileName() + (index++ < attachments.size() ? "\n" : ""))
+                    add(new TellRawTextComponent(file.getFileName() + (++index < attachments.size() ? "\n" : ""))
                             .setItalic()
                             .setColor("aqua")
                             .addClickEvent(new TellRawTextComponentEvent("open_url", file.getUrl()))

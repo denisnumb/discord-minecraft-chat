@@ -1,6 +1,5 @@
 package com.denisnumb.discord_chat_mod;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.ServerChatEvent;
@@ -10,15 +9,16 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.awt.*;
-import java.io.IOException;
-
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
+import static com.denisnumb.discord_chat_mod.DiscordUtils.sendEmbedMessage;
 
 @Mod.EventBusSubscriber(modid = DiscordChatMod.MODID)
 public class MinecraftEvents {
     @SubscribeEvent
     public static void onChatMessage(ServerChatEvent event) {
+        if (!isDiscordConnected() || !isServerStarted())
+            return;
+
         discordChannel.sendMessage(String.format("`<%s>` %s", event.getPlayer().getName().getString(), event.getRawText())).queue();
     }
 
@@ -27,10 +27,7 @@ public class MinecraftEvents {
         if (!(event.getEntity() instanceof Player))
             return;
 
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setDescription(event.getSource().getLocalizedDeathMessage(event.getEntity()).getString());
-        embedBuilder.setColor(0);
-        discordChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        sendEmbedMessage(event.getSource().getLocalizedDeathMessage(event.getEntity()).getString(), 0);
     }
 
     @SubscribeEvent
@@ -39,14 +36,11 @@ public class MinecraftEvents {
         if (displayInfo == null)
             return;
 
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setDescription(String.format(
+        sendEmbedMessage(String.format(
                 "**%s** получил достижение **%s**",
                 event.getEntity().getName().getString(),
                 displayInfo.getTitle().getString()
-        ));
-        embedBuilder.setColor(0xf1c40f);
-        discordChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        ), 0xf1c40f);
     }
 
     @SubscribeEvent
@@ -60,21 +54,10 @@ public class MinecraftEvents {
     }
 
     private static void joinLeaveEvent(PlayerEvent event) {
-        String message = event instanceof PlayerEvent.PlayerLoggedInEvent
-                ? "зашел на сервер"
-                : "вышел с сервера";
+        boolean isJoin = event instanceof PlayerEvent.PlayerLoggedInEvent;
+        String message = isJoin ? "зашел на сервер" : "вышел с сервера";
+        int color = isJoin ? 0x2ECC71 : 0xE74C3C;
 
-        int color = event instanceof PlayerEvent.PlayerLoggedInEvent
-                ? 0x2ECC71
-                : 0xE74C3C;
-
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setDescription(String.format(
-                "**%s** %s",
-                event.getEntity().getName().getString(),
-                message
-        ));
-        embedBuilder.setColor(color);
-        discordChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        sendEmbedMessage(String.format("**%s** %s", event.getEntity().getName().getString(), message), color);
     }
 }
