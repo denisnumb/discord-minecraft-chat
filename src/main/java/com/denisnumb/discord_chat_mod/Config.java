@@ -22,10 +22,20 @@ public class Config
             .comment("Do logging to the server console messages from discord")
             .define("logDiscordMessages", true);
 
+    private static final ForgeConfigSpec.BooleanValue ENABLE_PINNED_STATUS_MESSAGE = BUILDER
+            .comment("Create a pinned message with the current server status and player list")
+            .define("enablePinnedStatusMessage", true);
+
+    private static final ForgeConfigSpec.ConfigValue<String> MOD_LOCALE = BUILDER
+            .comment("Mod locale")
+            .define("modLocale", "en_us");
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
     public static String discordBotToken;
     public static String discordChannelId;
     public static boolean logDiscordMessages;
+    public static boolean enablePinnedStatusMessage;
+    public static String modLocale;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
@@ -33,5 +43,7 @@ public class Config
         discordBotToken = DISCORD_BOT_TOKEN.get();
         discordChannelId = DISCORD_CHANNEL_ID.get();
         logDiscordMessages = LOG_DISCORD_MESSAGES.get();
+        enablePinnedStatusMessage = ENABLE_PINNED_STATUS_MESSAGE.get();
+        modLocale = MOD_LOCALE.get();
     }
 }

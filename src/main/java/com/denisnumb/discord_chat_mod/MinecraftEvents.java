@@ -1,6 +1,7 @@
 package com.denisnumb.discord_chat_mod;
 
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -11,12 +12,17 @@ import net.minecraftforge.fml.common.Mod;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 import static com.denisnumb.discord_chat_mod.DiscordUtils.sendEmbedMessage;
+import static com.denisnumb.discord_chat_mod.DiscordUtils.sendShortEmbedMessage;
+import static com.denisnumb.discord_chat_mod.DiscordUtils.Color.*;
+import static com.denisnumb.discord_chat_mod.MinecraftUtils.getLocalizedDeathMessage;
+import static com.denisnumb.discord_chat_mod.MinecraftUtils.getTranslate;
+import static com.denisnumb.discord_chat_mod.ServerStatusController.updateServerStatusWithDelay;
 
 @Mod.EventBusSubscriber(modid = DiscordChatMod.MODID)
 public class MinecraftEvents {
     @SubscribeEvent
     public static void onChatMessage(ServerChatEvent event) {
-        if (!isDiscordConnected() || !isServerStarted())
+        if (!isDiscordConnected())
             return;
 
         discordChannel.sendMessage(String.format("`<%s>` %s", event.getPlayer().getName().getString(), event.getRawText())).queue();
@@ -27,7 +33,13 @@ public class MinecraftEvents {
         if (!(event.getEntity() instanceof Player))
             return;
 
-        sendEmbedMessage(event.getSource().getLocalizedDeathMessage(event.getEntity()).getString(), 0);
+        String message;
+        try{
+            message = getLocalizedDeathMessage(event.getSource(), event.getEntity());
+        } catch (Exception ignored) {
+            message = event.getSource().getLocalizedDeathMessage(event.getEntity()).getString();
+        }
+        sendShortEmbedMessage(message, DEFAULT);
     }
 
     @SubscribeEvent
@@ -36,11 +48,33 @@ public class MinecraftEvents {
         if (displayInfo == null)
             return;
 
-        sendEmbedMessage(String.format(
-                "**%s** получил достижение **%s**",
-                event.getEntity().getName().getString(),
-                displayInfo.getTitle().getString()
-        ), 0xf1c40f);
+        String languageKey = event.getAdvancement().getId().toLanguageKey()
+                .replace("minecraft", "advancements")
+                .replace("/", ".");
+
+        String message = displayInfo.getFrame() == FrameType.TASK
+                ? getTranslate("chat.type.advancement.task")
+                : displayInfo.getFrame() == FrameType.GOAL
+                ? getTranslate("chat.type.advancement.goal")
+                : getTranslate("chat.type.advancement.challenge");
+        String title = getTranslate(languageKey + ".title");
+        String description = getTranslate(languageKey + ".description");
+        int color = displayInfo.getFrame() == FrameType.CHALLENGE ? PURPLE : GOLD;
+
+        if (title == null)
+            title = displayInfo.getTitle().getString();
+        if (description == null)
+            description = displayInfo.getDescription().getString();
+
+        sendEmbedMessage(
+                String.format(
+                    message,
+                    "**" + event.getEntity().getName().getString() + "**",
+                    "**`" + title + "`**"
+                ),
+                description,
+                color
+        );
     }
 
     @SubscribeEvent
@@ -55,9 +89,10 @@ public class MinecraftEvents {
 
     private static void joinLeaveEvent(PlayerEvent event) {
         boolean isJoin = event instanceof PlayerEvent.PlayerLoggedInEvent;
-        String message = isJoin ? "зашел на сервер" : "вышел с сервера";
-        int color = isJoin ? 0x2ECC71 : 0xE74C3C;
+        String message = getTranslate(isJoin ? "multiplayer.player.joined" : "multiplayer.player.left");
+        int color = isJoin ? GREEN : RED;
 
-        sendEmbedMessage(String.format("**%s** %s", event.getEntity().getName().getString(), message), color);
+        sendShortEmbedMessage(String.format(message, "**" + event.getEntity().getName().getString() + "**"), color);
+        updateServerStatusWithDelay();
     }
 }

@@ -5,21 +5,19 @@ import com.denisnumb.discord_chat_mod.markdown.MarkdownTellRawConverter;
 import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponent;
 import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponentEvent;
 import com.denisnumb.discord_chat_mod.markdown.DiscordMentionData;
-import com.google.gson.Gson;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
+import static com.denisnumb.discord_chat_mod.DiscordUtils.prepareTellRawCommand;
+import static com.denisnumb.discord_chat_mod.MinecraftUtils.executeServerCommand;
 
 public class DiscordEvents extends ListenerAdapter {
-    private static final Gson gson = new Gson();
-
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.getMessage().getChannelId().equals(Config.discordChannelId)
@@ -29,23 +27,14 @@ public class DiscordEvents extends ListenerAdapter {
         if (Config.logDiscordMessages)
             System.out.printf("[Discord] <%s> %s%n", event.getAuthor().getEffectiveName(), event.getMessage().getContentDisplay());
 
-        if (!isServerStarted() || server.getPlayerCount() == 0)
+        if (server.getPlayerCount() == 0)
             return;
 
         for (String command : prepareTellRawCommands(event.getMessage()))
-            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), command);
+            executeServerCommand(command);
     }
 
-    private static String prepareCommand(List<TellRawTextComponent> basePart, List<TellRawTextComponent> part){
-        List<Object> commandJson = new ArrayList<>();
-        commandJson.add("");
-        commandJson.addAll(basePart);
-        commandJson.addAll(part);
-
-        return "/tellraw @a " + gson.toJson(commandJson);
-    }
-
-    private static List<String> prepareTellRawCommands(Message message){
+    private static @NotNull List<String> prepareTellRawCommands(Message message){
         ArrayList<String> commands = new ArrayList<>();
 
         Member member = Objects.requireNonNull(message.getMember());
@@ -79,7 +68,7 @@ public class DiscordEvents extends ListenerAdapter {
                 textPart = List.of(new TellRawTextComponent(content));
             }
 
-            commands.add(prepareCommand(basePart, textPart));
+            commands.add(prepareTellRawCommand(basePart, textPart));
         }
 
         if (!message.getAttachments().isEmpty()){
@@ -94,14 +83,14 @@ public class DiscordEvents extends ListenerAdapter {
                             .addHoverEvent(new TellRawTextComponentEvent("show_text", file.getUrl())));
                 }
             }};
-            commands.add(prepareCommand(basePart, attachmentPart));
+            commands.add(prepareTellRawCommand(basePart, attachmentPart));
         }
 
         if (!message.getStickers().isEmpty()){
             List<TellRawTextComponent> stickerPart = new ArrayList<>() {{
                 add(new TellRawTextComponent(String.format("*sticker* (%s)", message.getStickers().get(0).getName())).setItalic());
             }};
-            commands.add(prepareCommand(basePart, stickerPart));
+            commands.add(prepareTellRawCommand(basePart, stickerPart));
         }
 
         return commands;

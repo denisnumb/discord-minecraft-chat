@@ -4,8 +4,8 @@ package com.denisnumb.discord_chat_mod;
 import com.mojang.logging.LogUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,10 +16,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-
 import org.slf4j.Logger;
 
-import static com.denisnumb.discord_chat_mod.DiscordUtils.sendEmbedMessage;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.denisnumb.discord_chat_mod.ServerStatusController.*;
+import static com.denisnumb.discord_chat_mod.DiscordUtils.*;
+import static com.denisnumb.discord_chat_mod.MinecraftUtils.*;
 
 @Mod(DiscordChatMod.MODID)
 public class DiscordChatMod
@@ -28,7 +32,11 @@ public class DiscordChatMod
     public static final String MODID = "discord_chat_mod";
     public static JDA jda;
     public static MinecraftServer server;
-    public static TextChannel discordChannel;
+    public static MessageChannel discordChannel;
+    public static Message serverStatusMessage;
+
+    public static Map<String, String> locale;
+
 
     public DiscordChatMod()
     {
@@ -39,6 +47,37 @@ public class DiscordChatMod
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         server = event.getServer();
+        locale = loadLocalization(Config.modLocale);
+        if (server.isPublished())
+            initJDA();
+    }
+
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent ignored) {
+        sendShortEmbedMessage(getTranslate("discord_chat_mod.server.started", "Server started"), DiscordUtils.Color.GREEN);
+    }
+
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent ignored) {
+        sendShortEmbedMessage(getTranslate("discord_chat_mod.server.closed", "Server closed"), DiscordUtils.Color.RED);
+        stopJDA();
+    }
+
+    public static void onIntegratedServerStarted(){
+        new Thread(() -> {
+            initJDA();
+            sendShortEmbedMessage(String.format(getTranslate(
+                    "discord_chat_mod.server.local_started",
+                    "Local server started [`%d`]"
+                    ), server.getPort()), DiscordUtils.Color.GREEN);
+        }).start();
+    }
+
+    public static boolean isDiscordConnected() {
+        return jda != null && discordChannel != null;
+    }
+
+    private static void initJDA(){
 
         try {
             jda = JDABuilder.createDefault(Config.discordBotToken)
@@ -47,47 +86,30 @@ public class DiscordChatMod
                     .build();
 
             jda.awaitReady();
-            discordChannel = jda.getTextChannelById(Config.discordChannelId);
+            discordChannel = jda.getChannelById(MessageChannel.class, Config.discordChannelId);
 
             if (discordChannel == null)
                 throw new NullPointerException("Invalid Discord Channel ID");
-            else
-                LOGGER.info("Discord connected");
 
-            if (!server.isPublished())
-                jda.getPresence().setStatus(OnlineStatus.INVISIBLE);
+            if (Config.enablePinnedStatusMessage){
+                Optional<Message> statusMessage = findPinnedStatusMessage();
+                serverStatusMessage = statusMessage.orElseGet(() -> discordChannel.sendMessageEmbeds(createServerStatusMessageEmbed()).complete());
+
+                if (statusMessage.isEmpty() && !serverStatusMessage.isPinned())
+                    serverStatusMessage.pin().queue();
+                updateServerStatusWithDelay();
+            }
+
+            LOGGER.info("Discord connected");
         } catch (Exception e) {
-            LOGGER.error(String.format("DiscordConnectError: %s", e.getMessage()));
+            logErrorToServer(String.format("DiscordConnectError: %s", e.getMessage()));
             stopJDA();
         }
     }
 
-    @SubscribeEvent
-    public void onServerStarted(ServerStartedEvent event) {
-        sendEmbedMessage("Сервер запущен", 0x2ECC71);
-    }
-
-    @SubscribeEvent
-    public void onServerStopped(ServerStoppedEvent event) {
-        sendEmbedMessage("Сервер выключен", 0xE74C3C);
-        stopJDA();
-    }
-
-    public static boolean isDiscordConnected() {
-        return jda != null && discordChannel != null;
-    }
-
-    public static boolean isServerStarted() {
-        boolean result = server != null && server.isPublished();
-
-        if (result && isDiscordConnected() && !jda.getPresence().getStatus().equals(OnlineStatus.ONLINE))
-            jda.getPresence().setStatus(OnlineStatus.ONLINE);
-
-        return result;
-    }
-
     private static void stopJDA() {
         if (jda != null) {
+            updateServerStatusMessageToUnavailable();
             jda.shutdown();
             jda = null;
             LOGGER.info("Discord disconnected");
