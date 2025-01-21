@@ -11,6 +11,7 @@ import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.server;
 import static com.denisnumb.discord_chat_mod.DiscordUtils.buildEmbed;
 import static com.denisnumb.discord_chat_mod.MinecraftUtils.getTranslate;
+import static com.denisnumb.discord_chat_mod.ModLanguageKey.*;
 
 public class ServerStatusController {
     private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -37,21 +38,18 @@ public class ServerStatusController {
         if (!isDiscordConnected() || !Config.enablePinnedStatusMessage)
             return;
         scheduler.shutdown();
-        serverStatusMessage.editMessageEmbeds(buildEmbed(getTranslate("discord_chat_mod.server.status.unavailable", "Server is unavailable"), DiscordUtils.Color.RED)).queue();
+        serverStatusMessage.editMessageEmbeds(buildEmbed(getTranslate(SERVER_UNAVAILABLE, "Server is unavailable"), DiscordUtils.Color.RED)).queue();
     }
 
     public static MessageEmbed createServerStatusMessageEmbed(){
         return server.getPlayerCount() == 0
-                ? buildEmbed(getTranslate("discord_chat_mod.server.status.available", "There is no one on the server"), DiscordUtils.Color.DARK_GREEN)
+                ? buildEmbed(getTranslate(SERVER_AVAILABLE, "There is no one on the server"), DiscordUtils.Color.DARK_GREEN)
                 : buildEmbed(getOnlineCountString(), String.join("\n", server.getPlayerNames()), DiscordUtils.Color.GREEN);
     }
 
     private static String getOnlineCountString(){
         return String.format(
-                getTranslate(
-                        "discord_chat_mod.server.status.online_players",
-                        "Online [%d/%d]"
-                ),
+                getTranslate(ONLINE_PLAYERS,"Online [%d/%d]"),
                 server.getPlayerCount(),
                 server.getMaxPlayers()
         );

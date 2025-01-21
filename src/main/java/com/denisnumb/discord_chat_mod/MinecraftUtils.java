@@ -1,7 +1,7 @@
 package com.denisnumb.discord_chat_mod;
 
 import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponent;
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.logging.LogUtils;
 import net.minecraft.locale.Language;
@@ -11,11 +11,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
-
 import java.awt.Color;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
@@ -55,26 +55,66 @@ public class MinecraftUtils {
         return prepareTellRawCommand(components);
     }
 
-    public static String getTranslate(String key) {
-        return locale.get(key);
+    public static String getTranslate(String namespace, String key, String defaultValue) {
+        return getLocalization(namespace, Config.modLocale).getOrDefault(key, defaultValue);
     }
 
     public static String getTranslate(String key, String defaultValue) {
-        return locale.getOrDefault(key, defaultValue);
+        return getLocalization(MODID, Config.modLocale).getOrDefault(key, defaultValue);
     }
 
-    public static Map<String, String> loadLocalization(String localization) {
-        if (localization.equals("en_us"))
-            return Language.getInstance().getLanguageData();
+    public static String getTranslate(String key) {
+        return getLocalization(MODID, Config.modLocale).get(key);
+    }
 
-        ResourceLocation resourceLocation = new ResourceLocation(MODID, String.format("lang/%s.json", localization));
+    public static Map<String, String> getLocalization(String namespace, String locale)
+    {
+        if (namespace.equals("minecraft"))
+            namespace = MODID;
+
+        if (localeStorage.containsKey(namespace))
+            return localeStorage.get(namespace);
+
+        if (namespace.equals(MODID) && locale.equals("en_us")){
+            localeStorage.put(namespace, Language.getInstance().getLanguageData());
+            return getLocalization(namespace, locale);
+        }
+
+        try {
+            ResourceLocation resourceLocation = new ResourceLocation(namespace, String.format("lang/%s.json", locale));
+            var resource = server.getResourceManager().getResource(resourceLocation);
+            InputStreamReader reader = new InputStreamReader(resource.get().open(), StandardCharsets.UTF_8);
+            localeStorage.put(namespace, GSON.fromJson(reader, new TypeToken<Map<String, String>>(){}.getType()));
+        } catch (Exception e) {
+            logErrorToServer(String.format("Failed to load localization %s", namespace + "/" + String.format("lang/%s.json", locale)));
+            if (namespace.equals(MODID))
+                return getLocalization(namespace, "en_us");
+            localeStorage.put(namespace, Collections.emptyMap());
+        }
+        return getLocalization(namespace, locale);
+    }
+
+    public static String getAdvancementField(JsonObject jsonObject, String key) {
+        if (jsonObject.has("display")) {
+            JsonObject display = jsonObject.getAsJsonObject("display");
+            if (display.has(key)) {
+                JsonObject description = display.getAsJsonObject(key);
+                if (description.has("translate")) {
+                    return description.get("translate").getAsString();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static JsonObject getAdvancementFile(ResourceLocation resourceLocation)
+    {
         try {
             var resource = server.getResourceManager().getResource(resourceLocation);
             InputStreamReader reader = new InputStreamReader(resource.get().open(), StandardCharsets.UTF_8);
-            return GSON.fromJson(reader, new TypeToken<Map<String, String>>(){}.getType());
+            return GSON.fromJson(reader, JsonObject.class);
         } catch (Exception e) {
-            logErrorToServer(String.format("Failed to load localization %s", resourceLocation));
-            return Language.getInstance().getLanguageData();
+            return null;
         }
     }
 

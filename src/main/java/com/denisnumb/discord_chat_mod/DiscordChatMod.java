@@ -18,9 +18,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.slf4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.denisnumb.discord_chat_mod.ModLanguageKey.*;
 import static com.denisnumb.discord_chat_mod.ServerStatusController.*;
 import static com.denisnumb.discord_chat_mod.DiscordUtils.*;
 import static com.denisnumb.discord_chat_mod.MinecraftUtils.*;
@@ -34,8 +36,7 @@ public class DiscordChatMod
     public static MinecraftServer server;
     public static MessageChannel discordChannel;
     public static Message serverStatusMessage;
-
-    public static Map<String, String> locale;
+    public static final Map<String, Map<String, String>> localeStorage = new HashMap<>();
 
 
     public DiscordChatMod()
@@ -47,19 +48,18 @@ public class DiscordChatMod
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         server = event.getServer();
-        locale = loadLocalization(Config.modLocale);
         if (server.isPublished())
             initJDA();
     }
 
     @SubscribeEvent
     public void onServerStarted(ServerStartedEvent ignored) {
-        sendShortEmbedMessage(getTranslate("discord_chat_mod.server.started", "Server started"), DiscordUtils.Color.GREEN);
+        sendShortEmbedMessage(getTranslate(SERVER_STARTED, "Server started"), DiscordUtils.Color.GREEN);
     }
 
     @SubscribeEvent
     public void onServerStopped(ServerStoppedEvent ignored) {
-        sendShortEmbedMessage(getTranslate("discord_chat_mod.server.closed", "Server closed"), DiscordUtils.Color.RED);
+        sendShortEmbedMessage(getTranslate(SERVER_CLOSED, "Server closed"), DiscordUtils.Color.RED);
         stopJDA();
     }
 
@@ -67,7 +67,7 @@ public class DiscordChatMod
         new Thread(() -> {
             initJDA();
             sendShortEmbedMessage(String.format(getTranslate(
-                    "discord_chat_mod.server.local_started",
+                    LOCAL_SERVER_STARTED,
                     "Local server started [`%d`]"
                     ), server.getPort()), DiscordUtils.Color.GREEN);
         }).start();
