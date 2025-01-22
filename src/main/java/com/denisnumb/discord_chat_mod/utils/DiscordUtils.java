@@ -1,4 +1,4 @@
-package com.denisnumb.discord_chat_mod;
+package com.denisnumb.discord_chat_mod.utils;
 
 import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponent;
 import com.google.gson.Gson;

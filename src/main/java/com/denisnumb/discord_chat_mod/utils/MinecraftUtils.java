@@ -1,11 +1,13 @@
-package com.denisnumb.discord_chat_mod;
+package com.denisnumb.discord_chat_mod.utils;
 
+import com.denisnumb.discord_chat_mod.Config;
 import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponent;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.logging.LogUtils;
 import net.minecraft.locale.Language;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,10 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
-import static com.denisnumb.discord_chat_mod.DiscordUtils.Color.*;
-import static com.denisnumb.discord_chat_mod.DiscordUtils.prepareTellRawCommand;
+import static com.denisnumb.discord_chat_mod.utils.DiscordUtils.Color.*;
+import static com.denisnumb.discord_chat_mod.utils.DiscordUtils.prepareTellRawCommand;
 import static com.denisnumb.discord_chat_mod.markdown.DiscordMentionData.getHexColor;
 import static net.minecraft.util.datafix.fixes.BlockEntitySignTextStrictJsonFix.GSON;
 
@@ -82,7 +85,7 @@ public class MinecraftUtils {
 
         try {
             ResourceLocation resourceLocation = new ResourceLocation(namespace, String.format("lang/%s.json", locale));
-            var resource = server.getResourceManager().getResource(resourceLocation);
+            Optional<Resource> resource = server.getResourceManager().getResource(resourceLocation);
             InputStreamReader reader = new InputStreamReader(resource.get().open(), StandardCharsets.UTF_8);
             localeStorage.put(namespace, GSON.fromJson(reader, new TypeToken<Map<String, String>>(){}.getType()));
         } catch (Exception e) {
@@ -110,7 +113,7 @@ public class MinecraftUtils {
     public static JsonObject getAdvancementFile(ResourceLocation resourceLocation)
     {
         try {
-            var resource = server.getResourceManager().getResource(resourceLocation);
+            Optional<Resource> resource = server.getResourceManager().getResource(resourceLocation);
             InputStreamReader reader = new InputStreamReader(resource.get().open(), StandardCharsets.UTF_8);
             return GSON.fromJson(reader, JsonObject.class);
         } catch (Exception e) {

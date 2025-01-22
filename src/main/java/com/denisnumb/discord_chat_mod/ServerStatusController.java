@@ -1,5 +1,6 @@
 package com.denisnumb.discord_chat_mod;
 
+import com.denisnumb.discord_chat_mod.utils.DiscordUtils;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -9,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.server;
-import static com.denisnumb.discord_chat_mod.DiscordUtils.buildEmbed;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.getTranslate;
+import static com.denisnumb.discord_chat_mod.utils.DiscordUtils.buildEmbed;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.getTranslate;
 import static com.denisnumb.discord_chat_mod.ModLanguageKey.*;
 
 public class ServerStatusController {

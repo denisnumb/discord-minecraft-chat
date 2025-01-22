@@ -7,4 +7,5 @@ public class ModLanguageKey {
     public static final String SERVER_UNAVAILABLE = "discord_chat_mod.server.status.unavailable";
     public static final String SERVER_AVAILABLE = "discord_chat_mod.server.status.available";
     public static final String ONLINE_PLAYERS = "discord_chat_mod.server.status.online_players";
+    public static final String UNKNOWN_MENTION = "discord_chat_mod.command.mention.unknown";
 }

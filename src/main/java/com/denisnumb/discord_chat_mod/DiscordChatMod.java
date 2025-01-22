@@ -1,12 +1,15 @@
 package com.denisnumb.discord_chat_mod;
 
 
+import com.denisnumb.discord_chat_mod.utils.DiscordUtils;
 import com.mojang.logging.LogUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -24,8 +27,8 @@ import java.util.Optional;
 
 import static com.denisnumb.discord_chat_mod.ModLanguageKey.*;
 import static com.denisnumb.discord_chat_mod.ServerStatusController.*;
-import static com.denisnumb.discord_chat_mod.DiscordUtils.*;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.*;
+import static com.denisnumb.discord_chat_mod.utils.DiscordUtils.*;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.*;
 
 @Mod(DiscordChatMod.MODID)
 public class DiscordChatMod
@@ -34,7 +37,7 @@ public class DiscordChatMod
     public static final String MODID = "discord_chat_mod";
     public static JDA jda;
     public static MinecraftServer server;
-    public static MessageChannel discordChannel;
+    public static GuildMessageChannel discordChannel;
     public static Message serverStatusMessage;
     public static final Map<String, Map<String, String>> localeStorage = new HashMap<>();
 
@@ -81,12 +84,14 @@ public class DiscordChatMod
 
         try {
             jda = JDABuilder.createDefault(Config.discordBotToken)
+                    .setChunkingFilter(ChunkingFilter.ALL)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
                     .addEventListeners(new DiscordEvents())
                     .build();
 
             jda.awaitReady();
-            discordChannel = jda.getChannelById(MessageChannel.class, Config.discordChannelId);
+            discordChannel = jda.getChannelById(GuildMessageChannel.class, Config.discordChannelId);
 
             if (discordChannel == null)
                 throw new NullPointerException("Invalid Discord Channel ID");

@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
-import static com.denisnumb.discord_chat_mod.DiscordUtils.prepareTellRawCommand;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.executeServerCommand;
+import static com.denisnumb.discord_chat_mod.utils.DiscordUtils.prepareTellRawCommand;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.executeServerCommand;
 
 public class DiscordEvents extends ListenerAdapter {
     @Override
