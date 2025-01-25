@@ -95,10 +95,10 @@ dependencies {
     jarJar(group: 'org.apache.commons', name: 'commons-collections4', version: '[4.3,)') {
         jarJar.pin(it, '4.4')
     }
-    jarJar(group: 'net.java.dev.jna', name: 'jna', version: '[5.1,)') {
-        jarJar.pin(it, '5.1.0')
-    }
-    minecraftLibrary 'net.java.dev.jna:jna:5.1.0'
+//    jarJar(group: 'net.java.dev.jna', name: 'jna', version: '[5.1,)') {
+//        jarJar.pin(it, '5.1.0')
+//    }
+//    minecraftLibrary 'net.java.dev.jna:jna:5.1.0'
     minecraftLibrary 'net.dv8tion:JDA:5.2.2'
     minecraftLibrary 'com.squareup.okhttp3:okhttp:4.12.0'
     minecraftLibrary 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
