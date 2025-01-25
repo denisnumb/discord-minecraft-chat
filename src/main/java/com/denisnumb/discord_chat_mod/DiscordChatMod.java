@@ -83,10 +83,9 @@ public class DiscordChatMod
     private static void initJDA(){
 
         try {
-            jda = JDABuilder.createDefault(Config.discordBotToken)
+            jda = JDABuilder.create(Config.discordBotToken, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
-                    .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
                     .addEventListeners(new DiscordEvents())
                     .build();
 
