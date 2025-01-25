@@ -65,37 +65,41 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    jarJar(group: 'net.dv8tion', name: 'JDA', version: '[5.1,5.2)') {
-        jarJar.pin(it, '5.1.2')
+    jarJar(group: 'net.dv8tion', name: 'JDA', version: '[5.1,)') {
+        jarJar.pin(it, '5.2.2')
     }
-    jarJar(group: 'com.squareup.okhttp3', name: 'okhttp', version: '[4.11,4.12)') {
+    jarJar(group: 'com.squareup.okhttp3', name: 'okhttp', version: '[4.11,)') {
         jarJar.pin(it, '4.12.0')
     }
-    jarJar(group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '[1.8,1.9)') {
+    jarJar(group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '[1.8,)') {
         jarJar.pin(it, '1.9.0')
     }
-    jarJar(group: 'com.squareup.okio', name: 'okio', version: '[3.5,3.9)') {
+    jarJar(group: 'com.squareup.okio', name: 'okio', version: '[3.5,)') {
         jarJar.pin(it, '3.9.1')
     }
-    jarJar(group: 'com.neovisionaries', name: 'nv-websocket-client', version: '[2.13,2.14)') {
+    jarJar(group: 'com.neovisionaries', name: 'nv-websocket-client', version: '[2.13,)') {
         jarJar.pin(it, '2.14')
     }
-    jarJar(group: 'net.sf.trove4j', name: 'trove4j', version: '[3.0.0,3.0.3)') {
+    jarJar(group: 'net.sf.trove4j', name: 'trove4j', version: '[3.0.0,)') {
         jarJar.pin(it, '3.0.3')
     }
-    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '[2.14,2.15)') {
+    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '[2.14,)') {
         jarJar.pin(it, '2.15.2')
     }
-    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '[2.14,2.15)') {
+    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '[2.14,)') {
         jarJar.pin(it, '2.15.2')
     }
-    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '[2.14,2.15)') {
+    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '[2.14,)') {
         jarJar.pin(it, '2.15.2')
     }
-    jarJar(group: 'org.apache.commons', name: 'commons-collections4', version: '[4.3,4.4)') {
+    jarJar(group: 'org.apache.commons', name: 'commons-collections4', version: '[4.3,)') {
         jarJar.pin(it, '4.4')
     }
-    minecraftLibrary 'net.dv8tion:JDA:5.1.2'
+    jarJar(group: 'net.java.dev.jna', name: 'jna', version: '[5.1,)') {
+        jarJar.pin(it, '5.1.0')
+    }
+    minecraftLibrary 'net.java.dev.jna:jna:5.1.0'
+    minecraftLibrary 'net.dv8tion:JDA:5.2.2'
     minecraftLibrary 'com.squareup.okhttp3:okhttp:4.12.0'
     minecraftLibrary 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
     minecraftLibrary 'com.squareup.okio:okio:3.9.1'

@@ -54,13 +54,19 @@ public class MentionCommand {
         );
     }
 
+    private static boolean matchesPartial(Member member, String partial) {
+        return member.getEffectiveName().toLowerCase().contains(partial)
+                || member.getUser().getName().toLowerCase().contains(partial);
+    }
+
     private static final SuggestionProvider<CommandSourceStack> SUGGESTION_PROVIDER = (context, builder) -> {
         if (isDiscordConnected()){
             String partial = builder.getRemaining().toLowerCase();
 
-            ChannelMembersProvider.getNames(discordChannel)
+            ChannelMembersProvider.getList(discordChannel)
                     .stream()
-                    .filter(name -> name.toLowerCase().startsWith(partial) || name.toLowerCase().contains(partial))
+                    .filter(member -> matchesPartial(member, partial))
+                    .map(Member::getEffectiveName)
                     .forEach(builder::suggest);
         }
 
