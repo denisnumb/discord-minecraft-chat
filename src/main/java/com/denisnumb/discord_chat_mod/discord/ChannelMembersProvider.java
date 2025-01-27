@@ -1,5 +1,6 @@
-package com.denisnumb.discord_chat_mod.utils;
+package com.denisnumb.discord_chat_mod.discord;
 
+import com.denisnumb.discord_chat_mod.discord.model.DiscordMemberData;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
@@ -10,9 +11,22 @@ import java.util.stream.Stream;
 public class ChannelMembersProvider {
     private static long lastGetChannelMembers = 0;
     private static List<Member> cachedMembersList;
+    public static List<DiscordMemberData> clientMemberData = List.of();
 
-    public static List<Member> getList(GuildMessageChannel channel){
-        if (System.currentTimeMillis() - lastGetChannelMembers < 5000){
+    public static List<DiscordMemberData> getMemberData(GuildMessageChannel channel) {
+        return getList(channel).stream()
+                .map(member -> new DiscordMemberData(
+                        member.getEffectiveName(),
+                        member.getUser().getEffectiveName(),
+                        member.getUser().getName(),
+                        member.getAsMention(),
+                        member.getColor()
+                ))
+                .toList();
+    }
+
+    private static List<Member> getList(GuildMessageChannel channel){
+        if (System.currentTimeMillis() - lastGetChannelMembers < 5000) {
             return cachedMembersList;
         }
 
@@ -35,18 +49,5 @@ public class ChannelMembersProvider {
                 .sorted((m1, m2) -> m1.getEffectiveName().compareToIgnoreCase(m2.getEffectiveName()));
 
         return cachedMembersList = Stream.concat(onlineStream, offlineStream).toList();
-    }
-
-    public static List<String> getNames(GuildMessageChannel channel) {
-        return getList(channel).stream()
-                .map(Member::getEffectiveName)
-                .toList();
-    }
-
-    public static Member getMemberByName(GuildMessageChannel channel, String name) {
-        return getList(channel).stream()
-                .filter(member -> member.getEffectiveName().equals(name))
-                .findFirst()
-                .orElse(null);
     }
 }

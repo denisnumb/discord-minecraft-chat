@@ -1,6 +1,6 @@
-package com.denisnumb.discord_chat_mod.utils;
+package com.denisnumb.discord_chat_mod.discord;
 
-import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponent;
+import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponent;
 import com.google.gson.Gson;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -13,17 +13,6 @@ import java.util.Optional;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 
 public class DiscordUtils {
-    public static class Color{
-
-        public static final int RED = 0xE74C3C;
-        public static final int GREEN = 0x2ECC71;
-        public static final int DARK_GREEN = 0x1F8B4C;
-        public static final int DEFAULT = 0;
-        public static final int GOLD = 0xF1C40F;
-        public static final int WHITE = 0xFFFFFF;
-        public static final int PURPLE = 0xA700A7;
-    }
-
     private static final Gson gson = new Gson();
 
     public static Optional<Message> findPinnedStatusMessage(){
@@ -62,7 +51,7 @@ public class DiscordUtils {
     }
 
     @SafeVarargs
-    public static String prepareTellRawCommand(List<TellRawTextComponent>... parts){
+    public static String prepareTellRawCommand(List<TellRawComponent>... parts){
         List<Object> commandJson = new ArrayList<>();
         commandJson.add("");
         for (var part : parts)

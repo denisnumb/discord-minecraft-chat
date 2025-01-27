@@ -1,7 +1,6 @@
-package com.denisnumb.discord_chat_mod.utils;
+package com.denisnumb.discord_chat_mod;
 
-import com.denisnumb.discord_chat_mod.Config;
-import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponent;
+import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponent;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.logging.LogUtils;
@@ -13,7 +12,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
-import java.awt.Color;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -21,10 +19,10 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.denisnumb.discord_chat_mod.ColorUtils.Color.*;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
-import static com.denisnumb.discord_chat_mod.utils.DiscordUtils.Color.*;
-import static com.denisnumb.discord_chat_mod.utils.DiscordUtils.prepareTellRawCommand;
-import static com.denisnumb.discord_chat_mod.markdown.DiscordMentionData.getHexColor;
+import static com.denisnumb.discord_chat_mod.ColorUtils.getHexColor;
+import static com.denisnumb.discord_chat_mod.discord.DiscordUtils.prepareTellRawCommand;
 import static net.minecraft.util.datafix.fixes.BlockEntitySignTextStrictJsonFix.GSON;
 
 public class MinecraftUtils {
@@ -49,10 +47,10 @@ public class MinecraftUtils {
     }
 
     private static String buildLogMessageCommand(String message, int color) {
-        String hexColor = getHexColor(new Color(color));
-        ArrayList<TellRawTextComponent> components = new ArrayList<>() {{
-           add(new TellRawTextComponent("[discord_chat_mod] ").setBold().setColor(hexColor));
-           add(new TellRawTextComponent(message).setColor(hexColor));
+        String hexColor = getHexColor(color);
+        ArrayList<TellRawComponent> components = new ArrayList<>() {{
+           add(new TellRawComponent("[discord_chat_mod] ").setBold().setColor(hexColor));
+           add(new TellRawComponent(message).setColor(hexColor));
         }};
 
         return prepareTellRawCommand(components);

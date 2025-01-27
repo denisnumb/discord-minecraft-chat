@@ -1,5 +1,9 @@
 package com.denisnumb.discord_chat_mod.markdown;
 
+import com.denisnumb.discord_chat_mod.discord.model.DiscordMentionData;
+import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponent;
+import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponentEvent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,8 +11,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHAT_LINK_COLOR;
+import static com.denisnumb.discord_chat_mod.ColorUtils.getHexColor;
+
 public class MarkdownTellRawConverter{
-    private final ArrayList<TellRawTextComponent> result = new ArrayList<>();
+    private final ArrayList<TellRawComponent> result = new ArrayList<>();
     private final List<MarkdownToken> tokens;
     private final Map<String, DiscordMentionData> mentions;
 
@@ -21,7 +28,7 @@ public class MarkdownTellRawConverter{
         this.mentions = mentions;
     }
 
-    public List<TellRawTextComponent> convertMarkdownTokensToTellRaw() {
+    public List<TellRawComponent> convertMarkdownTokensToTellRaw() {
         for (MarkdownToken token : tokens)
             convertToken(token);
 
@@ -29,7 +36,7 @@ public class MarkdownTellRawConverter{
     }
 
     private void addPart(MarkdownToken token, String textPart){
-        TellRawTextComponent part = new TellRawTextComponent(textPart);
+        TellRawComponent part = new TellRawComponent(textPart);
 
         if (mentions.containsKey(textPart)){
             part.text = mentions.get(textPart).prettyMention;
@@ -41,13 +48,13 @@ public class MarkdownTellRawConverter{
             setPartStyles(part, token);
 
             if (token.obfuscated)
-                part.hoverEvent = new TellRawTextComponentEvent("show_text", textPart);
+                part.hoverEvent = new TellRawComponentEvent("show_text", textPart);
 
             if (token.isUrl()){
-                part.color = "aqua";
-                part.clickEvent = new TellRawTextComponentEvent("open_url", token.url);
+                part.color = getHexColor(CHAT_LINK_COLOR);
+                part.clickEvent = new TellRawComponentEvent("open_url", token.url);
                 String hoverValue = token.obfuscated ? String.format("%s (%s)", textPart, token.url) : token.url;
-                part.hoverEvent = new TellRawTextComponentEvent("show_text", hoverValue);
+                part.hoverEvent = new TellRawComponentEvent("show_text", hoverValue);
             }
         }
 
@@ -81,7 +88,7 @@ public class MarkdownTellRawConverter{
         }
     }
 
-    private static void setPartStyles(TellRawTextComponent part, MarkdownToken token){
+    private static void setPartStyles(TellRawComponent part, MarkdownToken token){
         if (token.bold) part.bold = true;
         if (token.italic) part.italic = true;
         if (token.strikethrough) part.strikethrough = true;

@@ -1,10 +1,11 @@
-package com.denisnumb.discord_chat_mod;
+package com.denisnumb.discord_chat_mod.discord;
 
+import com.denisnumb.discord_chat_mod.Config;
+import com.denisnumb.discord_chat_mod.discord.model.DiscordMentionData;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownTellRawConverter;
-import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponent;
-import com.denisnumb.discord_chat_mod.markdown.TellRawTextComponentEvent;
-import com.denisnumb.discord_chat_mod.markdown.DiscordMentionData;
+import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponent;
+import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponentEvent;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -14,8 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
-import static com.denisnumb.discord_chat_mod.utils.DiscordUtils.prepareTellRawCommand;
-import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.executeServerCommand;
+import static com.denisnumb.discord_chat_mod.ColorUtils.getHexColor;
+import static com.denisnumb.discord_chat_mod.discord.DiscordUtils.prepareTellRawCommand;
+import static com.denisnumb.discord_chat_mod.MinecraftUtils.executeServerCommand;
 
 public class DiscordEvents extends ListenerAdapter {
     @Override
@@ -39,13 +41,13 @@ public class DiscordEvents extends ListenerAdapter {
 
         Member member = Objects.requireNonNull(message.getMember());
         String userName = member.getEffectiveName();
-        String roleColor = DiscordMentionData.getHexColor(member.getColor());
+        String roleColor = getHexColor(member.getColor());
 
-        ArrayList<TellRawTextComponent> basePart = new ArrayList<>() {{
-            add(new TellRawTextComponent("[discord]").setBold().setColor("#F1C40F"));
-            add(new TellRawTextComponent(" <"));
-            add(new TellRawTextComponent(userName).setColor(roleColor));
-            add(new TellRawTextComponent("> "));
+        ArrayList<TellRawComponent> basePart = new ArrayList<>() {{
+            add(new TellRawComponent("[discord]").setBold().setColor("#F1C40F"));
+            add(new TellRawComponent(" <"));
+            add(new TellRawComponent(userName).setColor(roleColor));
+            add(new TellRawComponent("> "));
         }};
 
         if (!message.getContentRaw().isEmpty()){
@@ -58,37 +60,37 @@ public class DiscordEvents extends ListenerAdapter {
             for (GuildChannel channel : message.getMentions().getChannels())
                 mentions.put(channel.getAsMention(), new DiscordMentionData(channel));
 
-            List<TellRawTextComponent> textPart;
+            List<TellRawComponent> textPart;
             try {
                 textPart = new MarkdownTellRawConverter(MarkdownParser.parseMarkdown(message.getContentRaw()), mentions).convertMarkdownTokensToTellRaw();
             } catch (Exception ignored) {
                 String content = message.getContentRaw();
                 for (var entry : mentions.entrySet())
                     content = content.replace(entry.getKey(), entry.getValue().prettyMention);
-                textPart = List.of(new TellRawTextComponent(content));
+                textPart = List.of(new TellRawComponent(content));
             }
 
             commands.add(prepareTellRawCommand(basePart, textPart));
         }
 
         if (!message.getAttachments().isEmpty()){
-            List<TellRawTextComponent> attachmentPart = new ArrayList<>() {{
+            List<TellRawComponent> attachmentPart = new ArrayList<>() {{
                 int index = 0;
                 List<Message.Attachment> attachments = message.getAttachments();
                 for (var file : attachments){
-                    add(new TellRawTextComponent(file.getFileName() + (++index < attachments.size() ? "\n" : ""))
+                    add(new TellRawComponent(file.getFileName() + (++index < attachments.size() ? "\n" : ""))
                             .setItalic()
                             .setColor("aqua")
-                            .addClickEvent(new TellRawTextComponentEvent("open_url", file.getUrl()))
-                            .addHoverEvent(new TellRawTextComponentEvent("show_text", file.getUrl())));
+                            .addClickEvent(new TellRawComponentEvent("open_url", file.getUrl()))
+                            .addHoverEvent(new TellRawComponentEvent("show_text", file.getUrl())));
                 }
             }};
             commands.add(prepareTellRawCommand(basePart, attachmentPart));
         }
 
         if (!message.getStickers().isEmpty()){
-            List<TellRawTextComponent> stickerPart = new ArrayList<>() {{
-                add(new TellRawTextComponent(String.format("*sticker* (%s)", message.getStickers().get(0).getName())).setItalic());
+            List<TellRawComponent> stickerPart = new ArrayList<>() {{
+                add(new TellRawComponent(String.format("*sticker* (%s)", message.getStickers().get(0).getName())).setItalic());
             }};
             commands.add(prepareTellRawCommand(basePart, stickerPart));
         }

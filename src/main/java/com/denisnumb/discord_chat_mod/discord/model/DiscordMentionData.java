@@ -1,13 +1,13 @@
-package com.denisnumb.discord_chat_mod.markdown;
+package com.denisnumb.discord_chat_mod.discord.model;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 
-import javax.annotation.Nullable;
-import java.awt.*;
+import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHANNEL_MENTION_COLOR;
+import static com.denisnumb.discord_chat_mod.ColorUtils.getHexColor;
 
-public class DiscordMentionData{
+public class DiscordMentionData {
     public String name;
     public String prettyMention;
     public String color;
@@ -21,18 +21,12 @@ public class DiscordMentionData{
     }
 
     public DiscordMentionData(GuildChannel channel){
-        this(channel.getName(), "#" + channel.getName(), "#6974c9");
+        this(channel.getName(), "#" + channel.getName(), getHexColor(CHANNEL_MENTION_COLOR));
     }
 
-    private DiscordMentionData(String name, String prettyMention, String color){
+    public DiscordMentionData(String name, String prettyMention, String color){
         this.name = name;
         this.prettyMention = prettyMention;
         this.color = color;
-    }
-
-    public static String getHexColor(@Nullable Color color){
-        if (color == null)
-            return "#ffffff";
-        return "#" + Integer.toHexString(color.getRGB()).substring(2);
     }
 }
