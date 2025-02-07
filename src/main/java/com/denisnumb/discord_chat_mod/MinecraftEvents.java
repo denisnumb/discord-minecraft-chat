@@ -5,7 +5,7 @@ import com.denisnumb.discord_chat_mod.discord.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMemberData;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownToComponentConverter;
-import com.denisnumb.discord_chat_mod.network.DiscordMentionsPacket;
+import com.denisnumb.discord_chat_mod.network.mentions.DiscordMentionsPacket;
 import com.denisnumb.discord_chat_mod.network.ModNetworking;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

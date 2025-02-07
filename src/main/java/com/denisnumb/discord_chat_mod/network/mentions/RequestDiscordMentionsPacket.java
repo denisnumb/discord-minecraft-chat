@@ -1,6 +1,7 @@
-package com.denisnumb.discord_chat_mod.network;
+package com.denisnumb.discord_chat_mod.network.mentions;
 
 import com.denisnumb.discord_chat_mod.discord.ChannelMembersProvider;
+import com.denisnumb.discord_chat_mod.network.ModNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;

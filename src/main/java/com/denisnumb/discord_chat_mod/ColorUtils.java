@@ -6,6 +6,7 @@ public class ColorUtils {
     public static class Color{
 
         public static final int RED = 0xE74C3C;
+        public static final int LIME = 0x54FB54;
         public static final int GREEN = 0x2ECC71;
         public static final int DARK_GREEN = 0x1F8B4C;
         public static final int DEFAULT = 0;

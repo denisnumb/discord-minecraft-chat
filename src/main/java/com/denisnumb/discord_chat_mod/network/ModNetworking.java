@@ -1,6 +1,9 @@
 package com.denisnumb.discord_chat_mod.network;
 
 import com.denisnumb.discord_chat_mod.DiscordChatMod;
+import com.denisnumb.discord_chat_mod.network.mentions.DiscordMentionsPacket;
+import com.denisnumb.discord_chat_mod.network.mentions.RequestDiscordMentionsPacket;
+import com.denisnumb.discord_chat_mod.network.screenshot.ScreenshotPartPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,16 +28,24 @@ public class ModNetworking {
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            CHANNEL.messageBuilder(RequestDiscordMentionsPacket.class, 0, NetworkDirection.PLAY_TO_SERVER)
+            int id = 0;
+
+            CHANNEL.messageBuilder(RequestDiscordMentionsPacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
                     .encoder(RequestDiscordMentionsPacket::encode)
                     .decoder(RequestDiscordMentionsPacket::new)
                     .consumerMainThread(RequestDiscordMentionsPacket::handle)
                     .add();
 
-            CHANNEL.messageBuilder(DiscordMentionsPacket.class, 1, NetworkDirection.PLAY_TO_CLIENT)
+            CHANNEL.messageBuilder(DiscordMentionsPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
                     .encoder(DiscordMentionsPacket::encode)
                     .decoder(DiscordMentionsPacket::new)
                     .consumerMainThread(DiscordMentionsPacket::handle)
+                    .add();
+
+            CHANNEL.messageBuilder(ScreenshotPartPacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                    .encoder(ScreenshotPartPacket::encode)
+                    .decoder(ScreenshotPartPacket::new)
+                    .consumerMainThread(ScreenshotPartPacket::handle)
                     .add();
         });
     }

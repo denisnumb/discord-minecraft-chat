@@ -8,12 +8,17 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.denisnumb.discord_chat_mod.DiscordChatMod.isDiscordConnected;
+
 public class ChannelMembersProvider {
     private static long lastGetChannelMembers = 0;
     private static List<Member> cachedMembersList;
     public static List<DiscordMemberData> clientMemberData = List.of();
 
     public static List<DiscordMemberData> getMemberData(GuildMessageChannel channel) {
+        if (!isDiscordConnected())
+            return List.of();
+
         return getList(channel).stream()
                 .map(member -> new DiscordMemberData(
                         member.getEffectiveName(),

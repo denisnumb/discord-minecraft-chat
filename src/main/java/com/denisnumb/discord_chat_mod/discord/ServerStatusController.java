@@ -50,7 +50,7 @@ public class ServerStatusController {
         serverStatusMessage.editMessageEmbeds(buildEmbed(getTranslate(SERVER_UNAVAILABLE, "Server is unavailable"), RED)).queue();
     }
 
-    public static MessageEmbed createServerStatusMessageEmbed(){
+    private static MessageEmbed createServerStatusMessageEmbed(){
         return server.getPlayerCount() == 0
                 ? buildEmbed(getTranslate(SERVER_AVAILABLE, "There is no one on the server"), DARK_GREEN)
                 : buildEmbed(getOnlineCountString(), String.join("\n", server.getPlayerNames()), GREEN);

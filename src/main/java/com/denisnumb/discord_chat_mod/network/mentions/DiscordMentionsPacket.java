@@ -1,4 +1,4 @@
-package com.denisnumb.discord_chat_mod.network;
+package com.denisnumb.discord_chat_mod.network.mentions;
 
 import com.denisnumb.discord_chat_mod.discord.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMemberData;

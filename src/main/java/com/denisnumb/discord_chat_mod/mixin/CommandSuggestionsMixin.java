@@ -3,7 +3,7 @@ package com.denisnumb.discord_chat_mod.mixin;
 import com.denisnumb.discord_chat_mod.discord.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMemberData;
 import com.denisnumb.discord_chat_mod.network.ModNetworking;
-import com.denisnumb.discord_chat_mod.network.RequestDiscordMentionsPacket;
+import com.denisnumb.discord_chat_mod.network.mentions.RequestDiscordMentionsPacket;
 import com.google.common.base.Strings;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
@@ -137,18 +137,19 @@ public abstract class CommandSuggestionsMixin {
     }
 
     @Unique
-    private static boolean matchesPartial(DiscordMemberData member, String partial) {
+    private static boolean discord_minecraft_chat$matchesPartial(DiscordMemberData member, String partial) {
         return member.guildNickname.toLowerCase().contains(partial)
                 || member.discordNickName.toLowerCase().contains(partial)
                 || member.discordName.toLowerCase().contains(partial);
     }
 
+    @Unique
     private static final SuggestionProvider MENTIONS_PROVIDER = (context, builder) -> {
         ModNetworking.sendToServer(new RequestDiscordMentionsPacket());
         String partial = builder.getRemaining().toLowerCase().substring(1);
 
         ChannelMembersProvider.clientMemberData.stream()
-                .filter(data -> matchesPartial(data, partial))
+                .filter(data -> discord_minecraft_chat$matchesPartial(data, partial))
                 .map(DiscordMemberData::getPrettyMention)
                 .forEach(builder::suggest);
 

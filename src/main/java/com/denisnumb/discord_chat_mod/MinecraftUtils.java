@@ -27,23 +27,14 @@ import static net.minecraft.util.datafix.fixes.BlockEntitySignTextStrictJsonFix.
 
 public class MinecraftUtils {
     private static final Logger LOGGER = LogUtils.getLogger();
+
     public static void executeServerCommand(String command) {
         server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), command);
-    }
-
-    public static void logInfoToServer(String message) {
-        LOGGER.info(message);
-        executeServerCommand(buildLogMessageCommand(message, WHITE));
     }
 
     public static void logErrorToServer(String message) {
         LOGGER.error(message);
         executeServerCommand(buildLogMessageCommand(message, RED));
-    }
-
-    public static void logWarningToServer(String message) {
-        LOGGER.warn(message);
-        executeServerCommand(buildLogMessageCommand(message, GOLD));
     }
 
     private static String buildLogMessageCommand(String message, int color) {
@@ -54,6 +45,14 @@ public class MinecraftUtils {
         }};
 
         return prepareTellRawCommand(components);
+    }
+
+    public static String getTranslateClient(String key, String defaultValue){
+        return Language.getInstance().getLanguageData().getOrDefault(key, defaultValue);
+    }
+
+    public static String getTranslateClient(String key){
+        return Language.getInstance().getLanguageData().get(key);
     }
 
     public static String getTranslate(String namespace, String key, String defaultValue) {
@@ -87,7 +86,7 @@ public class MinecraftUtils {
             InputStreamReader reader = new InputStreamReader(resource.get().open(), StandardCharsets.UTF_8);
             localeStorage.put(namespace, GSON.fromJson(reader, new TypeToken<Map<String, String>>(){}.getType()));
         } catch (Exception e) {
-            logErrorToServer(String.format("Failed to load localization %s", namespace + "/" + String.format("lang/%s.json", locale)));
+            LOGGER.error("Failed to load localization {}", namespace + "/" + String.format("lang/%s.json", locale));
             if (namespace.equals(MODID))
                 return getLocalization(namespace, "en_us");
             localeStorage.put(namespace, Collections.emptyMap());
