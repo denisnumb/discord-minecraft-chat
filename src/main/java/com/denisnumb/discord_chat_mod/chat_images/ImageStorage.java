@@ -4,6 +4,7 @@ import com.denisnumb.discord_chat_mod.DiscordChatMod;
 import com.denisnumb.discord_chat_mod.chat_images.model.*;
 import com.denisnumb.discord_chat_mod.chat_images.model.Image;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +22,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -71,19 +73,29 @@ public class ImageStorage {
                     loadImage(url);
                 return parseImage(url);
             } catch (Exception e){
-                LOGGER.warn("ImageLoadError: {}", e.getMessage());
+                LOGGER.error("ImageLoadError: {}", e.getMessage());
             }
         }
         return null;
     }
 
-    private static void loadImage(String imageUrl) throws IOException {
+    private static void loadImage(String imageUrl) throws IOException, InterruptedException {
         try (InputStream inputStream = new URL(imageUrl).openStream()) {
             NativeImage nativeImage = NativeImage.read(inputStream);
             ResourceLocation textureLocation = new ResourceLocation(
                     DiscordChatMod.MODID + "/chat_image/" + imageUrl.hashCode()
             );
-            Minecraft.getInstance().getTextureManager().register(textureLocation, new DynamicTexture(nativeImage));
+
+            CountDownLatch latch = new CountDownLatch(1);
+            RenderSystem.recordRenderCall(() -> {
+                try {
+                    Minecraft.getInstance().getTextureManager().register(textureLocation, new DynamicTexture(nativeImage));
+                } finally {
+                    latch.countDown();
+                }
+            });
+            latch.await();
+
             IMAGE_CACHE.put(imageUrl, new Image(
                     imageUrl,
                     getImageScaledSize(nativeImage.getWidth(), nativeImage.getHeight()),
@@ -93,7 +105,7 @@ public class ImageStorage {
         }
     }
 
-    private static void loadGif(String gifUrl) throws IOException {
+    private static void loadGif(String gifUrl) throws IOException, InterruptedException {
         List<ResourceLocation> frames = new ArrayList<>();
         ImageSize frameSize = null;
         int frameDuration = -1;
@@ -105,8 +117,10 @@ public class ImageStorage {
 
         ImageReader reader = readers.next();
         reader.setInput(input, false);
+        int numFrames = reader.getNumImages(true);
+        CountDownLatch latch = new CountDownLatch(numFrames);
 
-        for (int i = 0; i < reader.getNumImages(true); i++) {
+        for (int i = 0; i < numFrames; i++) {
             BufferedImage frame = reader.read(i);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ImageIO.write(frame, "png", outputStream);
@@ -119,15 +133,20 @@ public class ImageStorage {
             ResourceLocation frameLocation = new ResourceLocation(
                     DiscordChatMod.MODID + "/chat_gif/" + gifUrl.hashCode() + "_" + i
             );
-            Minecraft.getInstance().getTextureManager().register(
-                    frameLocation,
-                    new DynamicTexture(NativeImage.read(new ByteArrayInputStream(outputStream.toByteArray())))
-            );
+            NativeImage nativeImage = NativeImage.read(new ByteArrayInputStream(outputStream.toByteArray()));
+            RenderSystem.recordRenderCall(() -> {
+                try {
+                    Minecraft.getInstance().getTextureManager().register(frameLocation, new DynamicTexture(nativeImage));
+                } finally {
+                    latch.countDown();
+                }
+            });
             frames.add(frameLocation);
         }
 
         reader.dispose();
         input.close();
+        latch.await();
 
         if (!frames.isEmpty()){
             IMAGE_CACHE.put(gifUrl, new AnimatedImage(
