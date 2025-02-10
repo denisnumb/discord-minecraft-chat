@@ -1,5 +1,6 @@
 package com.denisnumb.discord_chat_mod.mixin;
 
+import com.denisnumb.discord_chat_mod.chat_images.ImageScreen;
 import com.denisnumb.discord_chat_mod.network.screenshot.ScreenshotSender;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
@@ -27,39 +28,18 @@ import static com.denisnumb.discord_chat_mod.ModLanguageKey.SCREENSHOT_SENDING_E
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
 
-    @Shadow
-    public static boolean hasShiftDown() {
-        return false;
-    }
-
-    @Shadow
-    protected void insertText(String p_96587_, boolean p_96588_) {}
-
-    @Shadow
-    @Nullable
-    protected Minecraft minecraft;
-
-    @Shadow
-    @Final
-    private static Set<String> ALLOWED_PROTOCOLS;
-
-    @Shadow
-    @Nullable
-    private URI clickedLink;
-
-    @Shadow
-    private void confirmLink(boolean p_96623_) {}
-
-    @Shadow
-    private void openLink(URI p_96590_) {}
-
-    @Shadow
-    @Final
-    private static Logger LOGGER;
+    @Shadow public static boolean hasShiftDown() { return false; }
+    @Shadow protected abstract void insertText(String p_96587_, boolean p_96588_);
+    @Shadow @Nullable protected Minecraft minecraft;
+    @Shadow @Final private static Set<String> ALLOWED_PROTOCOLS;
+    @Shadow @Nullable private URI clickedLink;
+    @Shadow protected abstract void confirmLink(boolean p_96623_);
+    @Shadow protected abstract void openLink(URI p_96590_);
+    @Shadow @Final private static Logger LOGGER;
 
     /**
      * @author denisnumb
-     * @reason for implement custom click event
+     * @reason for implement custom click events: send_screenshot, open_image
      */
     @Overwrite
     public boolean handleComponentClicked(@Nullable Style p_96592_) {
@@ -106,12 +86,12 @@ public abstract class ScreenMixin {
                         if (!this.minecraft.player.connection.sendUnsignedCommand(s1.substring(1))) {
                             LOGGER.error("Not allowed to run command with signed argument from click event: '{}'", s1);
                         }
-                    } else {
-                        if (s1.startsWith("send_screenshot")) {
-                            discord_minecraft_chat$sendScreenshot(s1.replace("send_screenshot ", ""));
-                        } else
-                            LOGGER.error("Failed to run command without '/' prefix from click event: '{}'", s1);
-                    }
+                    } else if (s1.startsWith("send_screenshot")) {
+                        discord_minecraft_chat$sendScreenshot(s1.replace("send_screenshot ", ""));
+                    } else if (s1.startsWith("open_image")) {
+                        minecraft.setScreen(new ImageScreen(s1.replace("open_image ", "")));
+                    } else
+                        LOGGER.error("Failed to run command without '/' prefix from click event: '{}'", s1);
                 } else if (clickevent.getAction() == ClickEvent.Action.COPY_TO_CLIPBOARD) {
                     this.minecraft.keyboardHandler.setClipboard(clickevent.getValue());
                 } else {

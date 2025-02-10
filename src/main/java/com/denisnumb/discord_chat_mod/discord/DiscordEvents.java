@@ -8,14 +8,18 @@ import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponent;
 import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponentEvent;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.sticker.StickerItem;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHAT_LINK_COLOR;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 import static com.denisnumb.discord_chat_mod.ColorUtils.getHexColor;
+import static com.denisnumb.discord_chat_mod.MinecraftUtils.getTranslate;
+import static com.denisnumb.discord_chat_mod.ModLanguageKey.STICKER;
 import static com.denisnumb.discord_chat_mod.discord.DiscordUtils.prepareTellRawCommand;
 import static com.denisnumb.discord_chat_mod.MinecraftUtils.executeServerCommand;
 
@@ -80,7 +84,7 @@ public class DiscordEvents extends ListenerAdapter {
                 for (var file : attachments){
                     add(new TellRawComponent(file.getFileName() + (++index < attachments.size() ? "\n" : ""))
                             .setItalic()
-                            .setColor("aqua")
+                            .setColor(getHexColor(CHAT_LINK_COLOR))
                             .addClickEvent(new TellRawComponentEvent("open_url", file.getUrl()))
                             .addHoverEvent(new TellRawComponentEvent("show_text", file.getUrl())));
                 }
@@ -90,7 +94,11 @@ public class DiscordEvents extends ListenerAdapter {
 
         if (!message.getStickers().isEmpty()){
             List<TellRawComponent> stickerPart = new ArrayList<>() {{
-                add(new TellRawComponent(String.format("*sticker* (%s)", message.getStickers().get(0).getName())).setItalic());
+                StickerItem sticker = message.getStickers().get(0);
+                add(new TellRawComponent(String.format(getTranslate(STICKER, "*sticker* (%s)"), sticker.getName()))
+                        .setItalic()
+                        .addClickEvent(new TellRawComponentEvent("open_url", sticker.getIconUrl()))
+                );
             }};
             commands.add(prepareTellRawCommand(basePart, stickerPart));
         }

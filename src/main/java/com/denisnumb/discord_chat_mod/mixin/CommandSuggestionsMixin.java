@@ -4,7 +4,6 @@ import com.denisnumb.discord_chat_mod.discord.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMemberData;
 import com.denisnumb.discord_chat_mod.network.ModNetworking;
 import com.denisnumb.discord_chat_mod.network.mentions.RequestDiscordMentionsPacket;
-import com.google.common.base.Strings;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
@@ -22,63 +21,21 @@ import org.spongepowered.asm.mixin.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Mixin(CommandSuggestions.class)
 public abstract class CommandSuggestionsMixin {
-    @Shadow
-    @Final
-    EditBox input;
-
-    @Shadow
-    private ParseResults<SharedSuggestionProvider> currentParse;
-
-    @Shadow
-    boolean keepSuggestions;
-
-    @Shadow
-    private CommandSuggestions.SuggestionsList suggestions;
-
-    @Shadow
-    @Final
-    private List<FormattedCharSequence> commandUsage;
-
-    @Shadow
-    @Final
-    private boolean commandsOnly;
-
-    @Shadow
-    @Final
-    Minecraft minecraft;
-
-    @Shadow
-    @Final
-    private boolean onlyShowIfCursorPastError;
-
-    @Shadow
-    private CompletableFuture<Suggestions> pendingSuggestions;
-
-    @Shadow
-    private void updateUsageInfo(){}
-
-    @Shadow
-    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("(\\s+)");
-
-    @Shadow
-    private static int getLastWordIndex(String p_93913_) {
-        if (Strings.isNullOrEmpty(p_93913_)) {
-            return 0;
-        } else {
-            int $$1 = 0;
-            for(Matcher $$2 = WHITESPACE_PATTERN.matcher(p_93913_); $$2.find(); $$1 = $$2.end()) {}
-
-            return $$1;
-        }
-    }
-
+    @Shadow @Final EditBox input;
+    @Shadow private ParseResults<SharedSuggestionProvider> currentParse;
+    @Shadow boolean keepSuggestions;
+    @Shadow private CommandSuggestions.SuggestionsList suggestions;
+    @Shadow @Final private List<FormattedCharSequence> commandUsage;
+    @Shadow @Final private boolean commandsOnly;
+    @Shadow @Final Minecraft minecraft;
+    @Shadow @Final private boolean onlyShowIfCursorPastError;
+    @Shadow private CompletableFuture<Suggestions> pendingSuggestions;
+    @Shadow protected abstract void updateUsageInfo();
+    @Shadow private static int getLastWordIndex(String p_93913_) { return 0; }
     @Shadow public abstract void showSuggestions(boolean p_93931_);
-
 
     /**
      * @author denisnumb
@@ -92,7 +49,7 @@ public abstract class CommandSuggestionsMixin {
         }
 
         if (!this.keepSuggestions) {
-            this.input.setSuggestion((String)null);
+            this.input.setSuggestion(null);
             this.suggestions = null;
         }
 
