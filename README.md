@@ -53,6 +53,8 @@ Localization also works for other mods (last advancement from Farmer's Delight f
 
 ### Local server
 
+Automatically closes when host exits
+
 ![Screenshot 2025-02-11 014303](https://github.com/user-attachments/assets/5696c2cf-baf1-4b57-bc8e-ab192de2dc7f)
 
 
