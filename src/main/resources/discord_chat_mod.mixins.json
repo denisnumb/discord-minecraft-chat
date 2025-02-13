@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "com.denisnumb.discord_chat_mod.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "discord_chat_mod.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "ChatComponentMixin",
+    "CommandSuggestionsMixin",
+    "IntegratedServerMixin",
+    "ScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

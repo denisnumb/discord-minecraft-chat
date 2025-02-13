@@ -1,0 +1,164 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.78'
+    id 'idea'
+    id 'com.gradleup.shadow' version '9.0.0-beta8'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+version = mod_version
+group = mod_group_id
+
+repositories {
+    mavenLocal()
+}
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        gameTestServer {
+            type = "gameTestServer"
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+
+dependencies {
+    shadow("net.dv8tion:JDA:5.2.2") {
+        exclude group: "org.slf4j", module: "slf4j-api"
+    }
+    shadow("com.google.guava:guava:31.1-jre")
+
+    additionalRuntimeClasspath "net.dv8tion:JDA:5.2.2"
+}
+
+tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar){
+    archiveClassifier.set("")
+
+    relocate("com.squareup", "com.shadow.com.squareup")
+    relocate("com.neovisionaries", "com.shadow.com.neovisionaries")
+    relocate("com.fasterxml", "com.shadow.com.fasterxml")
+    relocate("com.google", "com.shadow.com.google")
+    relocate("com.sun", "com.shadow.com.sun")
+    relocate("net.dv8tion", "com.shadow.net.dv8tion")
+    relocate("org.apache", "com.shadow.org.apache")
+    relocate("org.intellij", "com.shadow.org.intellij")
+    relocate("org.jetbrains", "com.shadow.org.jetbrains")
+    relocate("org.checkerframework", "com.shadow.org.checkerframework")
+    relocate("javax.annotation", "com.shadow.javax.annotation")
+    relocate("club.minnced", "com.shadow.club.minnced")
+    relocate("gnu.trove", "com.shadow.gnu.trove")
+    relocate("google.protobuf", "com.shadow.google.protobuf")
+    relocate("kotlin", "com.shadow.kotlin")
+    relocate("okhttp3", "com.shadow.okhttp3")
+    relocate("okio", "com.shadow.okio")
+    relocate("tomp2p.opuswrapper", "com.shadow.tomp2p.opuswrapper")
+    relocate("natives", "com.shadow.natives")
+
+    configurations = [project.configurations.shadow]
+}
+
+
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+
+sourceSets.main.resources.srcDir generateModMetadata
+
+neoForge.ideSyncTask generateModMetadata
+
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+tasks.named("build") {
+    dependsOn shadowJar
+}
