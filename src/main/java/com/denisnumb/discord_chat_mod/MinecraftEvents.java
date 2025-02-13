@@ -93,7 +93,6 @@ public class MinecraftEvents {
         if (!displayInfo.shouldAnnounceChat())
             return;
 
-
         String message = displayInfo.getType() == AdvancementType.TASK
                 ? getTranslate("chat.type.advancement.task")
                 : displayInfo.getType() == AdvancementType.GOAL
