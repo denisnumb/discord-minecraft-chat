@@ -3,9 +3,10 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.spongepowered.mixin' version '0.7.+'
+    id 'com.gradleup.shadow' version '9.0.0-beta8'
 }
 
-jarJar.enable()
+// jarJar.enable()
 
 version = mod_version
 group = mod_group_id
@@ -65,40 +66,16 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    jarJar(group: 'net.dv8tion', name: 'JDA', version: '[5.1,)') {
-        jarJar.pin(it, '5.2.2')
-    }
-    jarJar(group: 'com.squareup.okhttp3', name: 'okhttp', version: '[4.11,)') {
-        jarJar.pin(it, '4.12.0')
-    }
-    jarJar(group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '[1.8,)') {
-        jarJar.pin(it, '1.9.0')
-    }
-    jarJar(group: 'com.squareup.okio', name: 'okio', version: '[3.5,)') {
-        jarJar.pin(it, '3.9.1')
-    }
-    jarJar(group: 'com.neovisionaries', name: 'nv-websocket-client', version: '[2.13,)') {
-        jarJar.pin(it, '2.14')
-    }
-    jarJar(group: 'net.sf.trove4j', name: 'trove4j', version: '[3.0.0,)') {
-        jarJar.pin(it, '3.0.3')
-    }
-    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '[2.14,)') {
-        jarJar.pin(it, '2.15.2')
-    }
-    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '[2.14,)') {
-        jarJar.pin(it, '2.15.2')
-    }
-    jarJar(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '[2.14,)') {
-        jarJar.pin(it, '2.15.2')
-    }
-    jarJar(group: 'org.apache.commons', name: 'commons-collections4', version: '[4.3,)') {
-        jarJar.pin(it, '4.4')
-    }
-//    jarJar(group: 'net.java.dev.jna', name: 'jna', version: '[5.1,)') {
-//        jarJar.pin(it, '5.1.0')
-//    }
-//    minecraftLibrary 'net.java.dev.jna:jna:5.1.0'
+    shadow("net.dv8tion:JDA:5.2.2") {transitive = false }
+    shadow("com.squareup.okhttp3:okhttp:4.12.0") {transitive = false }
+    shadow("org.jetbrains.kotlin:kotlin-stdlib:1.9.0") {transitive = false }
+    shadow("com.squareup.okio:okio:3.9.1") {transitive = false }
+    shadow("com.neovisionaries:nv-websocket-client:2.14") {transitive = false }
+    shadow("net.sf.trove4j:trove4j:3.0.3") {transitive = false }
+    shadow("com.fasterxml.jackson.core:jackson-databind:2.15.2") {transitive = false }
+    shadow("com.fasterxml.jackson.core:jackson-core:2.15.2") {transitive = false }
+    shadow("com.fasterxml.jackson.core:jackson-annotations:2.15.2") {transitive = false }
+    shadow("org.apache.commons:commons-collections4:4.4") {transitive = false }
 
     minecraftLibrary 'net.dv8tion:JDA:5.2.2'
     minecraftLibrary 'com.squareup.okhttp3:okhttp:4.12.0'
@@ -111,6 +88,21 @@ dependencies {
     minecraftLibrary 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
     minecraftLibrary 'org.apache.commons:commons-collections4:4.4'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+tasks.shadowJar {
+    configurations = [project.configurations.shadow]
+    archiveClassifier.set("")
+
+    relocate("com.squareup", "com.shadow.com.squareup")
+    relocate("com.neovisionaries", "com.shadow.com.neovisionaries")
+    relocate("com.fasterxml", "com.shadow.com.fasterxml")
+    relocate("net.dv8tion", "com.shadow.net.dv8tion")
+    relocate("org.apache", "com.shadow.org.apache")
+    relocate("gnu.trove", "com.shadow.gnu.trove")
+    relocate("kotlin", "com.shadow.kotlin")
+    relocate("okhttp3", "com.shadow.okhttp3")
+    relocate("okio", "com.shadow.okio")
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -149,6 +141,9 @@ tasks.named('jar', Jar).configure {
     finalizedBy 'reobfJar'
 }
 
+reobf {
+    shadowJar {}
+}
 
 publishing {
     publications {
@@ -169,3 +164,5 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+tasks.shadowJar.dependsOn 'reobfJar'
+project.tasks.build.dependsOn project.tasks.shadowJar
