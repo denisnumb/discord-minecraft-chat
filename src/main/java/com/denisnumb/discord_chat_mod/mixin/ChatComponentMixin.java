@@ -168,8 +168,8 @@ public abstract class ChatComponentMixin {
             return;
 
         int chatBottomY = Mth.floor((float) (graphics.guiHeight() - 40) / (float) this.getScale());
-        int chatTopY = chatBottomY - getLineHeight() * getLinesPerPage();
         int lineHeight = getLineHeight();
+        int chatTopY = chatBottomY - lineHeight * getLinesPerPage();
         boolean isChatFocused = isChatFocused();
 
         Map<Integer, Integer> messagesY = new HashMap<>();
@@ -190,9 +190,9 @@ public abstract class ChatComponentMixin {
             GuiMessage guiMessage = allMessages.get(messageIndex);
             List<String> urls = entry.getValue();
 
-            if (chatScrollbarPos > messageIndex || currentTime - guiMessage.addedTime() >= 200 && !isChatFocused)
-                continue;
             if (!messagesY.containsKey(messageIndex))
+                continue;
+            if (currentTime - guiMessage.addedTime() >= 200 && !isChatFocused)
                 continue;
 
             int messageY = messagesY.get(messageIndex);
