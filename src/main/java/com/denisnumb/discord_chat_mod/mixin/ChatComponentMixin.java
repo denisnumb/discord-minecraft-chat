@@ -7,17 +7,17 @@ import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
-import net.minecraft.client.gui.components.ComponentRenderUtils;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.denisnumb.discord_chat_mod.MinecraftUtils.getTranslateClient;
@@ -31,14 +31,12 @@ public abstract class ChatComponentMixin {
     @Shadow @Final private Minecraft minecraft;
     @Shadow @Final private List<GuiMessage.Line> trimmedMessages;
     @Shadow private int chatScrollbarPos;
-    @Shadow private boolean newMessageSinceScroll;
     @Shadow public abstract int getWidth();
     @Shadow protected abstract int getLineHeight();
     @Shadow protected abstract boolean isChatFocused();
     @Shadow public abstract double getScale();
     @Shadow @Final private List<GuiMessage> allMessages;
     @Shadow public abstract int getLinesPerPage();
-    @Shadow public void scrollChat(int p_205361_) {}
 
     @Unique
     private static final int MAX_MESSAGES = 500;
@@ -70,51 +68,56 @@ public abstract class ChatComponentMixin {
         return messageIndex;
     }
 
-    /**
-     * @author denisnumb
-     * @reason for implement allocating new chat lines for image displaying
-     */
-    @Overwrite
-    private void addMessage(Component message, @Nullable MessageSignature signature, int addedTime, @Nullable GuiMessageTag tag, boolean onlyTrimmed) {
-        int maxWidth = Mth.floor((double)this.getWidth() / this.getScale());
-        if (tag != null && tag.icon() != null) {
-            maxWidth -= tag.icon().width + 4 + 2;
-        }
+    @ModifyConstant(
+            method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V",
+            constant = @Constant(intValue = 100)
+    )
+    private int modifyAddMessageMessageLimit(int original){
+        return MAX_MESSAGES;
+    }
 
-        List<FormattedCharSequence> wrappedLines = ComponentRenderUtils.wrapComponents(message, maxWidth, this.minecraft.font);
-        boolean chatFocused = this.isChatFocused();
-
-        for(int i = 0; i < wrappedLines.size(); ++i) {
-            FormattedCharSequence line = wrappedLines.get(i);
-            if (chatFocused && this.chatScrollbarPos > 0) {
-                this.newMessageSinceScroll = true;
-                this.scrollChat(1);
-            }
-
-            boolean endOfEntry = i == wrappedLines.size() - 1;
-            trimmedMessages.add(0, new GuiMessage.Line(addedTime, line, tag, endOfEntry));
-        }
-
-
+    @Inject(
+            method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;add(ILjava/lang/Object;)V",
+                    ordinal = 0,
+                    shift = At.Shift.BY,
+                    by = 2
+            )
+    )
+    private void removeOldFromTrimmedMessages(Component message, MessageSignature signature, int addedTime, GuiMessageTag tag, boolean onlyTrimmed, CallbackInfo ci) {
         while(trimmedMessages.size() > MAX_MESSAGES) {
             int parentAddedTime = trimmedMessages.get(trimmedMessages.size() - 1).addedTime();
 
             do trimmedMessages.remove(trimmedMessages.size() - 1);
             while (trimmedMessages.get(trimmedMessages.size() - 1).addedTime() == parentAddedTime);
         }
+    }
 
-        if (!onlyTrimmed) {
-            allMessages.add(0, new GuiMessage(addedTime, message, signature, tag));
+    @Inject(
+            method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;add(ILjava/lang/Object;)V",
+                    ordinal = 1,
+                    shift = At.Shift.AFTER
+            )
+    )
+    private void removeOldFromAllMessages(Component message, MessageSignature signature, int addedTime, GuiMessageTag tag, boolean onlyTrimmed, CallbackInfo ci) {
+        while(allMessages.size() > MAX_MESSAGES) {
+            int parentAddedTime = allMessages.get(allMessages.size() - 1).addedTime();
 
-            while(allMessages.size() > MAX_MESSAGES) {
-                int parentAddedTime = allMessages.get(allMessages.size() - 1).addedTime();
-
-                do allMessages.remove(allMessages.size() - 1);
-                while (allMessages.get(allMessages.size() - 1).addedTime() == parentAddedTime);
-            }
+            do allMessages.remove(allMessages.size() - 1);
+            while (allMessages.get(allMessages.size() - 1).addedTime() == parentAddedTime);
         }
+    }
 
-        // allocate empty lines for image
+    @Inject(
+            method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V",
+            at = @At(value = "TAIL")
+    )
+    private void addMessageWithImage(Component message, MessageSignature signature, int addedTime, GuiMessageTag tag, boolean onlyTrimmed, CallbackInfo ci){
         List<String> componentUrls = discord_minecraft_chat$getComponentUrls(message);
         if (componentUrls.isEmpty())
             return;
@@ -151,8 +154,8 @@ public abstract class ChatComponentMixin {
                 }
             }
         });
-        // allocate empty lines for image
     }
+
 
     @Inject(method = "render", at = @At("TAIL"))
     private void render(GuiGraphics graphics, int currentTime, int mouseX, int mouseY, CallbackInfo ci){
