@@ -33,18 +33,16 @@ public class PacketHandler {
 
     public static void handleScreenshotPartPacket(final ScreenshotPartPacket data, final IPayloadContext context){
         context.enqueueWork(() -> {
-            context.enqueueWork(() -> {
-                if (context.player() instanceof ServerPlayer player){
-                    if (isDiscordConnected())
-                        ScreenshotReceiver.receivePart(data, player);
-                    else if (data.partIndex() == 0){
-                        player.sendSystemMessage(
-                                Component.literal(getTranslate(SERVER_IS_NOT_CONNECTED_TO_DISCORD, "Server is not connected to Discord"))
-                                        .withStyle(ChatFormatting.RED)
-                        );
-                    }
+            if (context.player() instanceof ServerPlayer player){
+                if (isDiscordConnected())
+                    ScreenshotReceiver.receivePart(data, player);
+                else if (data.partIndex() == 0){
+                    player.sendSystemMessage(
+                            Component.literal(getTranslate(SERVER_IS_NOT_CONNECTED_TO_DISCORD, "Server is not connected to Discord"))
+                                    .withStyle(ChatFormatting.RED)
+                    );
                 }
-            });
+            }
         });
     }
 }
