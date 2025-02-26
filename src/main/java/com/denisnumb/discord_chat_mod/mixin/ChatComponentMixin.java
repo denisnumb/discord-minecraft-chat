@@ -2,22 +2,20 @@ package com.denisnumb.discord_chat_mod.mixin;
 
 import com.denisnumb.discord_chat_mod.chat_images.model.*;
 import com.google.common.collect.Lists;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
-import net.minecraft.client.gui.components.ComponentRenderUtils;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.denisnumb.discord_chat_mod.MinecraftUtils.getTranslateClient;
@@ -31,15 +29,12 @@ public abstract class ChatComponentMixin {
     @Shadow @Final private Minecraft minecraft;
     @Shadow @Final private List<GuiMessage.Line> trimmedMessages;
     @Shadow private int chatScrollbarPos;
-    @Shadow private boolean newMessageSinceScroll;
     @Shadow public abstract int getWidth();
     @Shadow protected abstract int getLineHeight();
     @Shadow public abstract boolean isChatFocused();
     @Shadow public abstract double getScale();
     @Shadow @Final private List<GuiMessage> allMessages;
     @Shadow public abstract int getLinesPerPage();
-    @Shadow public void scrollChat(int p_205361_) {}
-    @Shadow protected abstract void logChatMessage(GuiMessage message);
 
     @Unique
     private static final int MAX_MESSAGES = 500;
@@ -71,19 +66,13 @@ public abstract class ChatComponentMixin {
         return messageIndex;
     }
 
-    /**
-     * @author denisnumb
-     * @reason for implement allocating new chat lines for image displaying
-     */
-    @Overwrite
-    public void addMessage(Component message, @Nullable MessageSignature signature, @Nullable GuiMessageTag tag) {
-        GuiMessage guimessage = new GuiMessage(this.minecraft.gui.getGuiTicks(), message, signature, tag);
-        this.logChatMessage(guimessage);
-        this.addMessageToDisplayQueue(guimessage);
-        this.addMessageToQueue(guimessage);
-
+    @Inject(
+            method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V",
+            at = @At("TAIL")
+    )
+    private void addMessage(Component chatComponent, MessageSignature headerSignature, GuiMessageTag tag, CallbackInfo ci, @Local GuiMessage guimessage){
         // allocate empty lines for image
-        List<String> componentUrls = discord_minecraft_chat$getComponentUrls(message);
+        List<String> componentUrls = discord_minecraft_chat$getComponentUrls(chatComponent);
         if (componentUrls.isEmpty())
             return;
 
@@ -113,61 +102,53 @@ public abstract class ChatComponentMixin {
                 trimmedIndex += linesCount;
 
                 for (int i = 0; i < linesCount; i++)
-                    allMessages.add(allIndex, new GuiMessage(guimessage.addedTime(), imageComponent, signature, tag));
+                    allMessages.add(allIndex, new GuiMessage(guimessage.addedTime(), imageComponent, headerSignature, tag));
                 allIndex += linesCount;
             }
         });
         // allocate empty lines for image
     }
 
-    /**
-     * @author denisnumb
-     * @reason for implement the removal of image chat lines when deleting the parent message with url
-     */
-    @Overwrite
-    private void addMessageToDisplayQueue(GuiMessage message) {
-        int i = Mth.floor((double)this.getWidth() / this.getScale());
-        GuiMessageTag.Icon guimessagetag$icon = message.icon();
-        if (guimessagetag$icon != null) {
-            i -= guimessagetag$icon.width + 4 + 2;
-        }
-
-        List<FormattedCharSequence> list = ComponentRenderUtils.wrapComponents(message.content(), i, this.minecraft.font);
-        boolean flag = this.isChatFocused();
-
-        for(int j = 0; j < list.size(); ++j) {
-            FormattedCharSequence formattedcharsequence = (FormattedCharSequence)list.get(j);
-            if (flag && this.chatScrollbarPos > 0) {
-                this.newMessageSinceScroll = true;
-                this.scrollChat(1);
-            }
-
-            boolean flag1 = j == list.size() - 1;
-            this.trimmedMessages.addFirst(new GuiMessage.Line(message.addedTime(), formattedcharsequence, message.tag(), flag1));
-        }
-
-        while(trimmedMessages.size() > MAX_MESSAGES) {
-            int parentAddedTime = trimmedMessages.getLast().addedTime();
-
-            do trimmedMessages.removeLast();
-            while (trimmedMessages.getLast().addedTime() == parentAddedTime);
-        }
-
+    @ModifyConstant(method = "addMessageToQueue", constant = @Constant(intValue = 100))
+    private int modifyAddMessageToQueueMessageLimit(int original) {
+        return MAX_MESSAGES;
     }
 
-    /**
-     * @author denisnumb
-     * @reason for implement the removal of image chat lines when deleting the parent message with url
-     */
-    @Overwrite
-    private void addMessageToQueue(GuiMessage message) {
-        this.allMessages.addFirst(message);
+    @ModifyConstant(method = "addMessageToDisplayQueue", constant = @Constant(intValue = 100))
+    private int modifyAddMessageToDisplayQueueMessageLimit(int original) {
+        return MAX_MESSAGES;
+    }
 
+    @Inject(method = "addMessageToQueue",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;add(ILjava/lang/Object;)V",
+                    shift = At.Shift.AFTER
+            )
+    )
+    private void removeOldFromAllMessages(GuiMessage message, CallbackInfo ci) {
         while(allMessages.size() > MAX_MESSAGES) {
             int parentAddedTime = allMessages.getLast().addedTime();
 
             do allMessages.removeLast();
             while (allMessages.getLast().addedTime() == parentAddedTime);
+        }
+    }
+
+    @Inject(method = "addMessageToDisplayQueue",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;add(ILjava/lang/Object;)V",
+                    shift = At.Shift.BY,
+                    by = 2
+            )
+    )
+    private void removeOldFromTrimmedMessages(GuiMessage message, CallbackInfo ci) {
+        while(trimmedMessages.size() > MAX_MESSAGES) {
+            int parentAddedTime = trimmedMessages.getLast().addedTime();
+
+            do trimmedMessages.removeLast();
+            while (trimmedMessages.getLast().addedTime() == parentAddedTime);
         }
     }
 
