@@ -37,10 +37,13 @@ public class MarkdownToComponentConverter{
 
         if (mentions.containsKey(textPart)){
             String mentionString = textPart;
-            textPart = mentions.get(mentionString).prettyMention;
-            component = Component.literal(textPart).withStyle(style -> style.withColor(
-                    TextColor.parseColor(mentions.get(mentionString).color)
-            ));
+            DiscordMemberData member = mentions.get(mentionString);
+            textPart = member.prettyMention;
+            component = Component.literal(textPart).withStyle(style ->
+                    style.withColor(TextColor.parseColor(member.color))
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(member.discordNickName)))
+                            .withInsertion("@" + member.guildNickname)
+            );
         }
 
         if (!textPart.isBlank()){

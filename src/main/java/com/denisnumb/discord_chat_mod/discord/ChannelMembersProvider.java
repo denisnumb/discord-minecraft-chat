@@ -41,8 +41,8 @@ public class ChannelMembersProvider {
         Stream<Member> onlineStream = members.stream()
                 .filter(member -> member.getOnlineStatus() != OnlineStatus.OFFLINE)
                 .sorted((m1, m2) -> {
-                    int m1RolePosition = m1.getRoles().get(0).getPosition();
-                    int m2RolePosition = m2.getRoles().get(0).getPosition();
+                    int m1RolePosition = m1.getRoles().isEmpty() ? 0 : m1.getRoles().get(0).getPosition();
+                    int m2RolePosition = m2.getRoles().isEmpty() ? 0 : m2.getRoles().get(0).getPosition();
 
                     if (m1RolePosition != m2RolePosition)
                         return Integer.compare(m2RolePosition, m1RolePosition);
