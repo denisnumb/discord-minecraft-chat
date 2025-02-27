@@ -15,6 +15,7 @@ public class ColorUtils {
         public static final int PURPLE = 0xA700A7;
         public static final int CHANNEL_MENTION_COLOR = 0x6974c9;
         public static final int CHAT_LINK_COLOR = 0x00b7ff;
+        public static final int DISCORD_COLOR = 0x5f78d9;
     }
 
     public static String getHexColor(@Nullable java.awt.Color color){

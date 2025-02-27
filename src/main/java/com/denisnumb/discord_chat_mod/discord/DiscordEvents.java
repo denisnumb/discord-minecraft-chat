@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHAT_LINK_COLOR;
+import static com.denisnumb.discord_chat_mod.ColorUtils.Color.*;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 import static com.denisnumb.discord_chat_mod.ColorUtils.getHexColor;
 import static com.denisnumb.discord_chat_mod.MinecraftUtils.getTranslate;
@@ -48,9 +48,13 @@ public class DiscordEvents extends ListenerAdapter {
         String roleColor = getHexColor(member.getColor());
 
         ArrayList<TellRawComponent> basePart = new ArrayList<>() {{
-            add(new TellRawComponent("[discord]").setBold().setColor("#F1C40F"));
-            add(new TellRawComponent(" <"));
-            add(new TellRawComponent(userName).setColor(roleColor));
+            add(new TellRawComponent("[discord] ").setBold().setColor(getHexColor(DISCORD_COLOR)));
+            add(new TellRawComponent("<"));
+            add(new TellRawComponent(userName)
+                    .setColor(roleColor)
+                    .setInsertion("@" + userName)
+                    .addClickEvent(new TellRawComponentEvent("suggest_command", "/mention " + userName))
+                    .addHoverEvent(new TellRawComponentEvent("show_text", member.getUser().getEffectiveName())));
             add(new TellRawComponent("> "));
         }};
 
@@ -94,7 +98,7 @@ public class DiscordEvents extends ListenerAdapter {
 
         if (!message.getStickers().isEmpty()){
             List<TellRawComponent> stickerPart = new ArrayList<>() {{
-                StickerItem sticker = message.getStickers().get(0);
+                StickerItem sticker = message.getStickers().getFirst();
                 add(new TellRawComponent(String.format(getTranslate(STICKER, "*sticker* (%s)"), sticker.getName()))
                         .setItalic()
                         .addClickEvent(new TellRawComponentEvent("open_url", sticker.getIconUrl()))

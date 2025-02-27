@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 public class TellRawComponent {
     @SerializedName("text")
     public String text;
+    @SerializedName("insertion")
+    public String insertion;
     @SerializedName("bold")
     public Boolean bold;
     @SerializedName("italic")
@@ -53,6 +55,11 @@ public class TellRawComponent {
 
     public TellRawComponent setColor(String color){
         this.color = color;
+        return this;
+    }
+
+    public TellRawComponent setInsertion(String insertion){
+        this.insertion = insertion;
         return this;
     }
 

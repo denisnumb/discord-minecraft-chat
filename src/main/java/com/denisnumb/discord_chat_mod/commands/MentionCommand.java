@@ -3,6 +3,7 @@ package com.denisnumb.discord_chat_mod.commands;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMemberData;
 import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponent;
 import com.denisnumb.discord_chat_mod.discord.ChannelMembersProvider;
+import com.denisnumb.discord_chat_mod.markdown.tellraw.TellRawComponentEvent;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -55,7 +56,12 @@ public class MentionCommand {
                                                 server.createCommandSourceStack(),
                                                 prepareTellRawCommand(new ArrayList<>() {{
                                                     add(new TellRawComponent(String.format("<%s> ", player.getName().getString())));
-                                                    add(new TellRawComponent(String.format("@%s", name)).setColor(member.color));
+                                                    add(new TellRawComponent(String.format("@%s", name))
+                                                            .setColor(member.color)
+                                                            .setInsertion("@" + name)
+                                                            .addClickEvent(new TellRawComponentEvent("suggest_command", "/mention " + name))
+                                                            .addHoverEvent(new TellRawComponentEvent("show_text", member.discordNickName))
+                                                    );
                                                 }})
                                         );
                                         discordChannel.sendMessage(String.format("`<%s>` %s", player.getName().getString(), member.mentionString)).queue();

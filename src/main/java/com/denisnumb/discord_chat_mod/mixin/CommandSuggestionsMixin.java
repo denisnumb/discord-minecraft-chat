@@ -34,7 +34,7 @@ public abstract class CommandSuggestionsMixin {
             ),
             cancellable = true
     )
-    private void beforeGetLastWordIndex(CallbackInfo ci) throws CommandSyntaxException {
+    private void suggestMentions(CallbackInfo ci) throws CommandSyntaxException {
         String currentInput = input.getValue().substring(0, input.getCursorPosition());
         int lastWordIndex = getLastWordIndex(currentInput);
 
