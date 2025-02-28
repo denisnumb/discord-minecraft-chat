@@ -71,12 +71,11 @@ public abstract class ChatComponentMixin {
             at = @At("TAIL")
     )
     private void addMessage(Component chatComponent, MessageSignature headerSignature, GuiMessageTag tag, CallbackInfo ci, @Local GuiMessage guimessage){
-        // allocate empty lines for image
         List<String> componentUrls = discord_minecraft_chat$getComponentUrls(chatComponent);
         if (componentUrls.isEmpty())
             return;
 
-        loadImagesParallel(componentUrls, trimmedMessages.size(), allMessages.size()).thenAccept(loadResult -> {
+        loadImagesParallel(componentUrls, () -> trimmedMessages.size(), () -> allMessages.size()).thenAccept(loadResult -> {
             int oldTrimmedSize = loadResult.trimmedMessagesSize();
             int oldAllSize = loadResult.allMessagesSize();
             int trimmedIndex = trimmedMessages.size() > oldTrimmedSize ? trimmedMessages.size() - oldTrimmedSize : 0;
@@ -106,7 +105,6 @@ public abstract class ChatComponentMixin {
                 allIndex += linesCount;
             }
         });
-        // allocate empty lines for image
     }
 
     @ModifyConstant(method = "addMessageToQueue", constant = @Constant(intValue = 100))

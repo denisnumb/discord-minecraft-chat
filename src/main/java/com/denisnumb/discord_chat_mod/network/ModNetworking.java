@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public class ModNetworking {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);
+        final PayloadRegistrar registrar = event.registrar("1").executesOn(HandlerThread.NETWORK).optional();
 
         registrar.playToServer(
                 RequestDiscordMentionsPacket.TYPE,

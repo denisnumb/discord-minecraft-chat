@@ -20,7 +20,7 @@ import static com.denisnumb.discord_chat_mod.discord.DiscordUtils.findPinnedStat
 
 public class ServerStatusController {
     public static Message serverStatusMessage;
-    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledExecutorService scheduler;
     private static long lastInvocationTime = 0;
 
     public static void updateServerStatusWithDelay() {
@@ -35,6 +35,7 @@ public class ServerStatusController {
     }
 
     public static void initServerStatusMessage(){
+        scheduler = Executors.newSingleThreadScheduledExecutor();
         Optional<Message> statusMessage = findPinnedStatusMessage();
         serverStatusMessage = statusMessage.orElseGet(() -> discordChannel.sendMessageEmbeds(createServerStatusMessageEmbed()).complete());
 
@@ -46,7 +47,7 @@ public class ServerStatusController {
     public static void updateServerStatusMessageToUnavailable(){
         if (!isDiscordConnected() || !Config.enablePinnedStatusMessage)
             return;
-        scheduler.shutdown();
+        scheduler.close();
         serverStatusMessage.editMessageEmbeds(buildEmbed(getTranslate(SERVER_UNAVAILABLE, "Server is unavailable"), RED)).queue();
     }
 

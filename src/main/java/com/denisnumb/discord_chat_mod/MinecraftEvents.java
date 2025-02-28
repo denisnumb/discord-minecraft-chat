@@ -5,11 +5,9 @@ import com.denisnumb.discord_chat_mod.discord.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMemberData;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownToComponentConverter;
-import com.denisnumb.discord_chat_mod.network.mentions.DiscordMentionsPacket;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -18,7 +16,6 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -129,11 +126,6 @@ public class MinecraftEvents {
 
     @SubscribeEvent
     public static void onPlayerJoinEvent(PlayerEvent.PlayerLoggedInEvent event) {
-        PacketDistributor.sendToPlayer(
-                (ServerPlayer)event.getEntity(),
-                new DiscordMentionsPacket(ChannelMembersProvider.getMemberData(discordChannel))
-        );
-
         joinLeaveEvent(event);
     }
 

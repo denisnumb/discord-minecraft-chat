@@ -74,38 +74,33 @@ configurations {
 
 
 dependencies {
-    shadow("net.dv8tion:JDA:5.2.2") {
-        exclude group: "org.slf4j", module: "slf4j-api"
-    }
-    shadow("com.google.guava:guava:31.1-jre")
+    shadow("net.dv8tion:JDA:5.2.2") {transitive = false }
+    shadow("com.squareup.okhttp3:okhttp:4.12.0") {transitive = false }
+    shadow("org.jetbrains.kotlin:kotlin-stdlib:1.9.0") {transitive = false }
+    shadow("com.squareup.okio:okio:3.9.1") {transitive = false }
+    shadow("com.neovisionaries:nv-websocket-client:2.14") {transitive = false }
+    shadow("net.sf.trove4j:trove4j:3.0.3") {transitive = false }
+    shadow("com.fasterxml.jackson.core:jackson-databind:2.15.2") {transitive = false }
+    shadow("com.fasterxml.jackson.core:jackson-core:2.15.2") {transitive = false }
+    shadow("com.fasterxml.jackson.core:jackson-annotations:2.15.2") {transitive = false }
+    shadow("org.apache.commons:commons-collections4:4.4") {transitive = false }
 
     additionalRuntimeClasspath "net.dv8tion:JDA:5.2.2"
 }
 
 tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar){
+    configurations = [project.configurations.shadow]
     archiveClassifier.set("")
 
     relocate("com.squareup", "com.shadow.com.squareup")
     relocate("com.neovisionaries", "com.shadow.com.neovisionaries")
     relocate("com.fasterxml", "com.shadow.com.fasterxml")
-    relocate("com.google", "com.shadow.com.google")
-    relocate("com.sun", "com.shadow.com.sun")
     relocate("net.dv8tion", "com.shadow.net.dv8tion")
     relocate("org.apache", "com.shadow.org.apache")
-    relocate("org.intellij", "com.shadow.org.intellij")
-    relocate("org.jetbrains", "com.shadow.org.jetbrains")
-    relocate("org.checkerframework", "com.shadow.org.checkerframework")
-    relocate("javax.annotation", "com.shadow.javax.annotation")
-    relocate("club.minnced", "com.shadow.club.minnced")
     relocate("gnu.trove", "com.shadow.gnu.trove")
-    relocate("google.protobuf", "com.shadow.google.protobuf")
     relocate("kotlin", "com.shadow.kotlin")
     relocate("okhttp3", "com.shadow.okhttp3")
     relocate("okio", "com.shadow.okio")
-    relocate("tomp2p.opuswrapper", "com.shadow.tomp2p.opuswrapper")
-    relocate("natives", "com.shadow.natives")
-
-    configurations = [project.configurations.shadow]
 }
 
 
