@@ -122,7 +122,7 @@ public abstract class ChatComponentMixin {
         if (componentUrls.isEmpty())
             return;
 
-        loadImagesParallel(componentUrls, trimmedMessages.size(), allMessages.size()).thenAccept(loadResult -> {
+        loadImagesParallel(componentUrls, () -> trimmedMessages.size(), () -> allMessages.size()).thenAccept(loadResult -> {
             int oldTrimmedSize = loadResult.trimmedMessagesSize();
             int oldAllSize = loadResult.allMessagesSize();
             int trimmedIndex = trimmedMessages.size() > oldTrimmedSize ? trimmedMessages.size() - oldTrimmedSize : 0;

@@ -25,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 import static com.denisnumb.discord_chat_mod.chat_images.ImageUtils.*;
 import static com.mojang.text2speech.Narrator.LOGGER;
@@ -36,11 +36,23 @@ public class ImageStorage {
 
     public static final Map<String, AbstractImage> IMAGE_CACHE = new HashMap<>();
     public static final Set<String> HANDLED_URLS = new HashSet<>();
+    private static CompletableFuture<LoadResult> lastTask = CompletableFuture.completedFuture(null);
 
-    public static CompletableFuture<LoadResult> loadImagesParallel(List<String> urls, int trimmedSize, int allSize) {
+    public static CompletableFuture<LoadResult> loadImagesParallel(
+            List<String> urls,
+            Supplier<Integer> trimmedSize,
+            Supplier<Integer> allSize
+    ) {
+        synchronized (ImageStorage.class) {
+            lastTask = lastTask.thenComposeAsync(ignored -> runLoadImages(urls, trimmedSize.get(), allSize.get()));
+            return lastTask;
+        }
+    }
+
+    private static CompletableFuture<LoadResult> runLoadImages(List<String> urls, int trimmedSize, int allSize) {
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-        List<CompletableFuture<AbstractImage>> futures = urls.stream()
+        List<CompletableFuture<AbstractImage>> futures = urls.stream().distinct()
                 .map(url -> CompletableFuture.supplyAsync(() -> parseImage(url), executor))
                 .toList();
 
@@ -49,7 +61,7 @@ public class ImageStorage {
                 .thenApply(v -> new LoadResult(
                         trimmedSize,
                         allSize,
-                        futures.stream().map(CompletableFuture::join).collect(Collectors.toList())
+                        urls.stream().map(ImageStorage::parseImage).toList()
                 ))
                 .whenComplete((res, ex) -> executor.shutdown());
     }

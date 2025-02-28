@@ -1,10 +1,13 @@
 package com.denisnumb.discord_chat_mod;
 
+import com.denisnumb.discord_chat_mod.network.ModNetworking;
+import com.denisnumb.discord_chat_mod.network.mentions.RequestDiscordMentionsPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.ScreenshotEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -43,5 +46,10 @@ public class MinecraftClientEvents {
                         .append(screenshotName)
                         .append(clickToSendComponent)
         );
+    }
+
+    @SubscribeEvent
+    public static void onJoinServer(ClientPlayerNetworkEvent.LoggingIn event){
+        ModNetworking.sendToServer(new RequestDiscordMentionsPacket());
     }
 }

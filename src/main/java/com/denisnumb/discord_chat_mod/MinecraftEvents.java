@@ -5,12 +5,9 @@ import com.denisnumb.discord_chat_mod.discord.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMemberData;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownToComponentConverter;
-import com.denisnumb.discord_chat_mod.network.mentions.DiscordMentionsPacket;
-import com.denisnumb.discord_chat_mod.network.ModNetworking;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -128,11 +125,6 @@ public class MinecraftEvents {
 
     @SubscribeEvent
     public static void onPlayerJoinEvent(PlayerEvent.PlayerLoggedInEvent event) {
-        ModNetworking.sendToPlayer(
-                new DiscordMentionsPacket(ChannelMembersProvider.getMemberData(discordChannel)),
-                (ServerPlayer)event.getEntity()
-        );
-
         joinLeaveEvent(event);
     }
 
