@@ -93,6 +93,7 @@ dependencies {
 tasks.shadowJar {
     configurations = [project.configurations.shadow]
     archiveClassifier.set("")
+    mergeServiceFiles()
 
     relocate("com.squareup", "com.shadow.com.squareup")
     relocate("com.neovisionaries", "com.shadow.com.neovisionaries")
