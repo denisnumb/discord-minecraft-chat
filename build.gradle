@@ -91,6 +91,7 @@ dependencies {
 tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar){
     configurations = [project.configurations.shadow]
     archiveClassifier.set("")
+    mergeServiceFiles()
 
     relocate("com.squareup", "com.shadow.com.squareup")
     relocate("com.neovisionaries", "com.shadow.com.neovisionaries")
