@@ -31,14 +31,12 @@ body:
     validations:
       required: true
   - type: textarea
-    id: attachments
     attributes:
       label: "latest.log file"
       description: "Attach your latest.log file"
     validations:
       required: false
   - type: textarea
-    id: attachments
     attributes:
       label: "crash-report file"
       description: "Attach your crash-report file (if exists)"
