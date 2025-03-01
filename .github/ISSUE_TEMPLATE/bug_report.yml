@@ -1,0 +1,44 @@
+name: Bug Report
+description: Report if the game crashes on startup or the mod doesn't work properly.
+labels: bug
+body:
+  - type: textarea
+    attributes:
+      label: Describe the problem
+      description: >
+        A clear description of what the bug is
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Minecraft Version
+      description: >
+        For example: 1.20.1
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Modloader Version
+      description: >
+        For example: Forge 47.3.0
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Discord Chat Mod Version
+      description: >
+        For example: 2.5.5
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "latest.log file"
+      description: "Attach your latest.log file"
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: "crash-report file"
+      description: "Attach your crash-report file (if exists)"
+    validations:
+      required: false
