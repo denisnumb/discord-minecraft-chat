@@ -4,7 +4,7 @@ labels: bug
 body:
   - type: textarea
     attributes:
-      label: Describe the problem
+      label: Problem description
       description: >
         A clear description of what the bug is
     validations:
