@@ -129,7 +129,7 @@ public class MinecraftUtils {
             for (ServerPlayer player : getPlayerListBySelector(selector))
                 player.sendSystemMessage(ComponentUtils.updateForEntity(null, message, player, 0), false);
         } catch (CommandSyntaxException e) {
-            e.printStackTrace();
+            LOGGER.error("CommandSyntaxException", e);
         } catch (Exception ignored) {}
     }
 

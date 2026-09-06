@@ -34,8 +34,7 @@ public class AvatarUrlStorage {
                 if (urlMap == null)
                     urlMap = new HashMap<>();
             } catch (Exception e) {
-                LOGGER.error("LoadAvatarUrlsError: " + e.getMessage());
-                e.printStackTrace();
+                LOGGER.error("LoadAvatarUrlsError", e);
             }
         }
     }
@@ -48,8 +47,7 @@ public class AvatarUrlStorage {
         try (FileWriter writer = new FileWriter(file)) {
             GSON.toJson(urlMap, writer);
         } catch (Exception e) {
-            LOGGER.error("SaveAvatarUrlsError: " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("SaveAvatarUrlsError", e);
         }
     }
 

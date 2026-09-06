@@ -175,7 +175,7 @@ public final class DiscordChatMod {
             trySendServerStartMessage();
         } catch (Exception e) {
             logErrorToServer(Component.literal(String.format("DiscordConnectError: %s", e.getMessage())));
-            e.printStackTrace();
+            LOGGER.error("", e);
             stopJDA();
         }
     }

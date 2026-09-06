@@ -247,13 +247,13 @@ public class DiscordMessageUtils {
             return Optional.of(mca);
         } catch (InsufficientPermissionException e) {
             logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMessage()));
-            e.printStackTrace();
+            LOGGER.error("", e);
         } catch (ErrorResponseException e) {
             logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMeaning()));
-            e.printStackTrace();
+            LOGGER.error("", e);
         } catch (Exception e) {
             logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessage(channel.getName()));
-            e.printStackTrace();
+            LOGGER.error("", e);
         }
 
         return Optional.empty();
@@ -267,13 +267,13 @@ public class DiscordMessageUtils {
                 mca.queue();
         } catch (InsufficientPermissionException e) {
             logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMessage()));
-            e.printStackTrace();
+            LOGGER.error("", e);
         } catch (ErrorResponseException e) {
             logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMeaning()));
-            e.printStackTrace();
+            LOGGER.error("", e);
         } catch (Exception e) {
             logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessage(channel.getName()));
-            e.printStackTrace();
+            LOGGER.error("", e);
         }
 
         return Optional.empty();

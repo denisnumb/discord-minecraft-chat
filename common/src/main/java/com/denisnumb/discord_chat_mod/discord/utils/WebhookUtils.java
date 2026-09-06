@@ -305,8 +305,7 @@ public class WebhookUtils {
             handleResponseCode(connection);
             connection.disconnect();
         } catch (Exception e) {
-            LOGGER.error("SendWebhookError: " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("SendWebhookError", e);
         }
     }
 

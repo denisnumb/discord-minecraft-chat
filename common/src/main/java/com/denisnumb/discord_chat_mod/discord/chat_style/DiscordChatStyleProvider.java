@@ -201,8 +201,7 @@ public class DiscordChatStyleProvider {
 
             return Optional.of(result);
         } catch (Exception e){
-            LOGGER.error("Error parsing discord message style for message type [{}]", messageType);
-            e.printStackTrace();
+            LOGGER.error("Error parsing discord message style for message type [{}]", messageType, e);
         }
 
         return Optional.empty();

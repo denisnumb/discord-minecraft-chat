@@ -63,8 +63,7 @@ public final class LocaleStorage {
             saveMinecraftLocaleToCache(locale, data);
             addLanguageData(data);
         } catch (Exception e) {
-            LOGGER.warn("Failed to load minecraft localization from {}", url);
-            e.printStackTrace();
+            LOGGER.warn("Failed to load minecraft localization from {}", url, e);
         }
     }
 
