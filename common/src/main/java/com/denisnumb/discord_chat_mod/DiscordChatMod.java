@@ -12,7 +12,7 @@ import com.denisnumb.discord_chat_mod.discord.data_providers.ChannelMembersProvi
 import com.denisnumb.discord_chat_mod.discord.data_providers.CustomEmojiProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.StickersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
 import com.mojang.logging.LogUtils;
 import com.neovisionaries.ws.client.ProxySettings;
 import com.neovisionaries.ws.client.WebSocketFactory;
@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
@@ -98,7 +99,7 @@ public final class DiscordChatMod {
             initJDA();
             getDiscordMessageComponents(MessageType.LOCAL_SERVER_START,
                     Map.of(
-                            Parameters.Translatable.LOCAL_SERVER_STARTED, ServerLocaleProvider.Server.localStarted(server.getPort()),
+                            Parameters.Translatable.LOCAL_SERVER_STARTED, DiscordLocaleProvider.Server.localStarted(server.getPort()),
                             Parameters.SERVER_PORT, String.valueOf(server.getPort())
                     )
             ).ifPresent(components -> sendMessageFromServer(ChannelCategory.SERVER_START_STOP, DiscordChannelRegistry.getAllContexts(), components));
@@ -173,7 +174,7 @@ public final class DiscordChatMod {
             LOGGER.info("Discord connected");
             trySendServerStartMessage();
         } catch (Exception e) {
-            logErrorToServer(String.format("DiscordConnectError: %s", e.getMessage()));
+            logErrorToServer(Component.literal(String.format("DiscordConnectError: %s", e.getMessage())));
             e.printStackTrace();
             stopJDA();
         }

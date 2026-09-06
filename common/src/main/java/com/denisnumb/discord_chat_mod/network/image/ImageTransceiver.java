@@ -6,7 +6,7 @@ import com.denisnumb.discord_chat_mod.chat_images.ImageStorage;
 import com.denisnumb.discord_chat_mod.discord.chat_style.MessageType;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils;
-import com.denisnumb.discord_chat_mod.locale.ClientLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.denisnumb.discord_chat_mod.network.BigPacketsTransceiver;
 import com.denisnumb.discord_chat_mod.network.PlatformPacketDistributor;
 import com.denisnumb.discord_chat_mod.network.image.model.ImagePartPacketPayload;
@@ -50,12 +50,12 @@ public class ImageTransceiver {
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - lastImageSendTime < 2000) {
-            MinecraftUtils.showTitleBarMessage(ClientLocaleProvider.SendImage.cooldown()
+            MinecraftUtils.showTitleBarMessage(MinecraftLocaleProvider.SendImage.cooldown()
                     .withColor(ChatFormatting.YELLOW.getColor()));
             return;
         }
 
-        MinecraftUtils.showTitleBarMessage(ClientLocaleProvider.SendImage.sending());
+        MinecraftUtils.showTitleBarMessage(MinecraftLocaleProvider.SendImage.sending());
         networkPool.execute(() -> {
             try {
                 byte[] data = gson.toJson(payload).getBytes(StandardCharsets.UTF_8);
@@ -220,6 +220,6 @@ public class ImageTransceiver {
     }
 
     private static void sendErrorMessageToPlayer(Player player, String errorMessage) {
-        player.displayClientMessage(ClientLocaleProvider.SendImage.Error.send(errorMessage).withStyle(ChatFormatting.RED), false);
+        player.displayClientMessage(MinecraftLocaleProvider.SendImage.Error.send(errorMessage).withStyle(ChatFormatting.RED), false);
     }
 }

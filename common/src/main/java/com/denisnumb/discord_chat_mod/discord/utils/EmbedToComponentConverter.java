@@ -3,16 +3,12 @@ package com.denisnumb.discord_chat_mod.discord.utils;
 import com.denisnumb.discord_chat_mod.EmojiUtils;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMentionData;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownToComponentConverter;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,11 +100,13 @@ public final class EmbedToComponentConverter {
             separateEmbedSections.add(() -> {
                 if (embed.getThumbnail() != null) {
                     String thumbnailUrl = embed.getThumbnail().getUrl();
-                    appendEmbedLine(result, sideColor, () -> buildImageLine(String.format("\uD83D\uDDBC %s: ", ServerLocaleProvider.thumbnail()), thumbnailUrl));
+                    appendEmbedLine(result, sideColor, () ->
+                            buildImageLine(Component.literal("\uD83D\uDDBC ").append(MinecraftLocaleProvider.thumbnail()).append(": "), thumbnailUrl));
                 }
                 if (embed.getImage() != null) {
                     String imageUrl = embed.getImage().getUrl();
-                    appendEmbedLine(result, sideColor, () -> buildImageLine(String.format("\uD83D\uDDBC %s: ", ServerLocaleProvider.image()), imageUrl));
+                    appendEmbedLine(result, sideColor, () ->
+                            buildImageLine(Component.literal("\uD83D\uDDBC ").append(MinecraftLocaleProvider.image()).append(": "), imageUrl));
                 }
             });
         }
@@ -470,10 +468,10 @@ public final class EmbedToComponentConverter {
                 Component.literal(BORDER_BOTTOM + "  ").withColor(sideColor).append(finalFooterComponent));
     }
 
-    private static Component buildImageLine(String label, String url) {
-        MutableComponent line = Component.literal(label).withColor(ChatFormatting.GRAY.getColor());
+    private static Component buildImageLine(MutableComponent label, String url) {
+        MutableComponent line = label.withColor(ChatFormatting.GRAY.getColor());
         line.append(
-                Component.literal(String.format("[%s]", ServerLocaleProvider.open()))
+                ComponentUtils.wrapInSquareBrackets(MinecraftLocaleProvider.open())
                         .withColor(ChatFormatting.AQUA.getColor())
                         .withStyle(style -> style
                                 .withClickEvent(new ClickEvent.OpenUrl(URI.create(url)))

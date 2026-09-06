@@ -3,7 +3,7 @@ package com.denisnumb.discord_chat_mod.discord.utils;
 import com.denisnumb.discord_chat_mod.discord.data_providers.StickersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordGuildContext;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.mojang.logging.LogUtils;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Webhook;
@@ -246,13 +246,13 @@ public class DiscordMessageUtils {
 
             return Optional.of(mca);
         } catch (InsufficientPermissionException e) {
-            logErrorToServer(ServerLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMessage()));
+            logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMessage()));
             e.printStackTrace();
         } catch (ErrorResponseException e) {
-            logErrorToServer(ServerLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMeaning()));
+            logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMeaning()));
             e.printStackTrace();
         } catch (Exception e) {
-            logErrorToServer(ServerLocaleProvider.Discord.Error.sendMessage(channel.getName()));
+            logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessage(channel.getName()));
             e.printStackTrace();
         }
 
@@ -266,13 +266,13 @@ public class DiscordMessageUtils {
             else
                 mca.queue();
         } catch (InsufficientPermissionException e) {
-            logErrorToServer(ServerLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMessage()));
+            logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMessage()));
             e.printStackTrace();
         } catch (ErrorResponseException e) {
-            logErrorToServer(ServerLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMeaning()));
+            logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessageWithCause(channel.getName(), e.getMeaning()));
             e.printStackTrace();
         } catch (Exception e) {
-            logErrorToServer(ServerLocaleProvider.Discord.Error.sendMessage(channel.getName()));
+            logErrorToServer(MinecraftLocaleProvider.Discord.Error.sendMessage(channel.getName()));
             e.printStackTrace();
         }
 

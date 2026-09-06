@@ -1,7 +1,7 @@
 package com.denisnumb.discord_chat_mod.discord.slash_commands;
 
 import com.denisnumb.discord_chat_mod.discord.model.DiscordGuildContext;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -20,12 +20,12 @@ public class DiscordSlashCommands {
         jda.updateCommands().queue();
 
         List<CommandData> commandList = List.of(
-                Commands.slash("list", ServerLocaleProvider.Discord.SlashCommands.List.description()),
-                Commands.slash("uptime", ServerLocaleProvider.Discord.SlashCommands.Uptime.description()),
-                Commands.slash("tps", ServerLocaleProvider.Discord.SlashCommands.Tps.description()),
-                Commands.slash("allowed_commands", ServerLocaleProvider.Discord.SlashCommands.AllowedCommands.description()),
-                Commands.slash("cmd", ServerLocaleProvider.Discord.SlashCommands.Cmd.description())
-                        .addOption(OptionType.STRING, "command", ServerLocaleProvider.Discord.SlashCommands.Cmd.Args.Command.description(), true, true)
+                Commands.slash("list", DiscordLocaleProvider.Discord.SlashCommands.List.description()),
+                Commands.slash("uptime", DiscordLocaleProvider.Discord.SlashCommands.Uptime.description()),
+                Commands.slash("tps", DiscordLocaleProvider.Discord.SlashCommands.Tps.description()),
+                Commands.slash("allowed_commands", DiscordLocaleProvider.Discord.SlashCommands.AllowedCommands.description()),
+                Commands.slash("cmd", DiscordLocaleProvider.Discord.SlashCommands.Cmd.description())
+                        .addOption(OptionType.STRING, "command", DiscordLocaleProvider.Discord.SlashCommands.Cmd.Args.Command.description(), true, true)
         );
 
         for (DiscordGuildContext ctx : guildContexts) {

@@ -293,14 +293,14 @@ public class MinecraftUtils {
         Minecraft.getInstance().gui.setOverlayMessage(message, false);
     }
 
-    public static void logErrorToServer(String message) {
-        LOGGER.error(message);
+    public static void logErrorToServer(Component message) {
+        LOGGER.error(message.getString());
         if (ConfigProvider.getConfig().isLoggingDiscordErrorsToServerChatEnabled())
             sendSystemMessageToPlayersBySelector(buildLogMessageComponent(message, ChatFormatting.RED.getColor()), ConfigProvider.getConfig().discordErrorsChatPlayerSelector());
     }
 
-    public static void logWarnToServer(String message) {
-        LOGGER.warn(message);
+    public static void logWarnToServer(Component message) {
+        LOGGER.warn(message.getString());
         if (ConfigProvider.getConfig().isLoggingDiscordErrorsToServerChatEnabled())
             sendSystemMessageToPlayersBySelector(buildLogMessageComponent(message, ChatFormatting.YELLOW.getColor()), ConfigProvider.getConfig().discordErrorsChatPlayerSelector());
     }
@@ -321,11 +321,11 @@ public class MinecraftUtils {
         return new String[0];
     }
 
-    private static Component buildLogMessageComponent(String message, int color) {
+    private static Component buildLogMessageComponent(Component message, int color) {
         return Component.empty()
                 .append(Component.literal("[discord_chat_mod] ")
                         .withStyle(style -> style.withBold(true))
                 )
-                .append(Component.literal(message)).withColor(color);
+                .append(message).withColor(color);
     }
 }

@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.markdown;
 
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.Style;
@@ -34,7 +34,7 @@ public final class ComponentToMarkdownConverter {
         }
 
         if (contents instanceof TranslatableContents translatable) {
-            String translation = ServerLocaleProvider.getTranslate(translatable.getKey());
+            String translation = DiscordLocaleProvider.getTranslate(translatable.getKey());
 
             Object[] args = translatable.getArgs();
             String[] resolvedArgs = new String[args.length];

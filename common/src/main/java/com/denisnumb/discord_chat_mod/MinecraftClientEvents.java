@@ -2,7 +2,7 @@ package com.denisnumb.discord_chat_mod;
 
 import com.denisnumb.discord_chat_mod.chat_images.ImageStorage;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
-import com.denisnumb.discord_chat_mod.locale.ClientLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.denisnumb.discord_chat_mod.network.emoji.DiscordEmojisTransceiver;
 
 import com.denisnumb.discord_chat_mod.network.mentions.DiscordMentionsTransceiver;
@@ -24,11 +24,11 @@ public class MinecraftClientEvents {
                         style.withClickEvent(new ClickEvent.OpenFile(screenshotFile.getAbsolutePath()))
                 );
 
-        Component clickToSendComponent = Component.literal(" ").append(ClientLocaleProvider.Command.SendScreenshot.clickToSend())
+        Component clickToSendComponent = Component.literal(" ").append(MinecraftLocaleProvider.Command.SendScreenshot.clickToSend())
                 .withStyle(style -> style
                         .withColor(ChatFormatting.GREEN.getColor())
                         .withClickEvent(new ClickEvent.RunCommand(ImageStorage.SEND_SCREENSHOT_COMMAND + screenshotFile.getAbsolutePath()))
-                        .withHoverEvent(new HoverEvent.ShowText(ClientLocaleProvider.Command.SendScreenshot.clickToSendHint()))
+                        .withHoverEvent(new HoverEvent.ShowText(MinecraftLocaleProvider.Command.SendScreenshot.clickToSendHint()))
                 );
 
         return Component.translatable("screenshot.success", screenshotName).append(clickToSendComponent);

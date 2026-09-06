@@ -6,7 +6,7 @@ import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.config.configs.DiscordGuildsConfig;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordGuildContext;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Webhook;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -70,7 +71,7 @@ public class DiscordChannelRegistry {
 
             Guild guild = jda.getGuildById(guildConfig.guildId());
             if (guild == null) {
-                logErrorToServer(ServerLocaleProvider.Discord.Error.invalidGuild(guildConfig.guildId()));
+                logErrorToServer(MinecraftLocaleProvider.Discord.Error.invalidGuild(guildConfig.guildId()));
                 continue;
             }
 
@@ -84,7 +85,7 @@ public class DiscordChannelRegistry {
             try{
                 context.setDefaultChannel(getDiscordChannel(context, guildConfig.defaultChannelId()));
             } catch (IllegalStateException e){
-                logErrorToServer(ServerLocaleProvider.Discord.Error.invalidDefaultChannel(guild.getName()));
+                logErrorToServer(MinecraftLocaleProvider.Discord.Error.invalidDefaultChannel(guild.getName()));
                 continue;
             }
 
@@ -109,7 +110,19 @@ public class DiscordChannelRegistry {
         }
 
         if (GUILD_CONTEXTS.isEmpty())
-            logWarnToServer(ServerLocaleProvider.Discord.Warn.noGuildsConfigured());
+            logWarnToServer(MinecraftLocaleProvider.Discord.Warn.noGuildsConfigured());
+    }
+
+    static class InvalidChannelException extends IllegalStateException {
+        private final Component errorMessage;
+
+        public InvalidChannelException(Component errorMessage){
+            this.errorMessage = errorMessage;
+        }
+
+        public Component getErrorMessage() {
+            return errorMessage;
+        }
     }
 
     private static @Nullable GuildMessageChannel getDiscordChannel(@Nullable DiscordGuildContext context, String channelId) {
@@ -123,7 +136,7 @@ public class DiscordChannelRegistry {
                         : context.guild.getChannelById(GuildMessageChannel.class, channelId);
 
                 if (channel == null)
-                    throw new IllegalArgumentException(ServerLocaleProvider.Discord.Error.invalidChannel(channelId));
+                    throw new InvalidChannelException(MinecraftLocaleProvider.Discord.Error.invalidChannel(channelId));
 
                 checkDiscordBotPermissionsInChannel(channel);
                 initChannelWebhook(context, channel);
@@ -131,8 +144,10 @@ public class DiscordChannelRegistry {
                     context.CHANNEL_CACHE.put(channelId, channel);
 
                 return channel;
-            } catch (Exception e){
-                logErrorToServer(e.getMessage());
+            } catch (InvalidChannelException e) {
+                logErrorToServer(e.getErrorMessage());
+            } catch (Exception e) {
+                logErrorToServer(Component.literal(e.getMessage()));
             }
         }
 
@@ -146,8 +161,8 @@ public class DiscordChannelRegistry {
         if (channel instanceof TextChannel textChannel){
             if (!textChannel.getGuild().getSelfMember().hasPermission(textChannel, Permission.MANAGE_WEBHOOKS)){
                 logErrorToServer(
-                        ServerLocaleProvider.Discord.Webhook.Error.init(
-                                ServerLocaleProvider.Discord.Webhook.Error.missingPermission("#" + channel.getName())
+                        MinecraftLocaleProvider.Discord.Webhook.Error.init(
+                                MinecraftLocaleProvider.Discord.Webhook.Error.missingPermission("#" + channel.getName())
                         )
                 );
                 return;
@@ -168,19 +183,19 @@ public class DiscordChannelRegistry {
 
                 context.registerWebhook(channel, webhook);
             } catch (Exception e) {
-                logWarnToServer(ServerLocaleProvider.Discord.Webhook.Error.init(e.getMessage()));
+                logWarnToServer(MinecraftLocaleProvider.Discord.Webhook.Error.init(e.getMessage()));
             }
 
         } else {
             logWarnToServer(
-                    ServerLocaleProvider.Discord.Webhook.Error.init(
-                            ServerLocaleProvider.Discord.Webhook.Error.invalidChannelType("#" + channel.getName())
+                    MinecraftLocaleProvider.Discord.Webhook.Error.init(
+                            MinecraftLocaleProvider.Discord.Webhook.Error.invalidChannelType("#" + channel.getName())
                     )
             );
         }
     }
 
-    private static void checkDiscordBotPermissionsInChannel(GuildMessageChannel channel) throws IllegalStateException {
+    private static void checkDiscordBotPermissionsInChannel(GuildMessageChannel channel) throws InvalidChannelException {
         Member selfMember = channel.getGuild().getSelfMember();
         EnumSet<Permission> missingPermissions = requiredPermissions.stream()
                 .filter(perm -> !selfMember.hasPermission(channel, perm))
@@ -189,7 +204,7 @@ public class DiscordChannelRegistry {
         if (!missingPermissions.isEmpty()){
 
 
-            throw new IllegalStateException(ServerLocaleProvider.Discord.Error.missingPermissions(
+            throw new InvalidChannelException(MinecraftLocaleProvider.Discord.Error.missingPermissions(
                     "#" + channel.getName(),
                     String.join("\n", missingPermissions.stream().map(Permission::getName).toList())
             ));

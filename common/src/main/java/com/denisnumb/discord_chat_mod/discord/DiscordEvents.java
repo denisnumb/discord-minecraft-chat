@@ -11,7 +11,8 @@ import com.denisnumb.discord_chat_mod.discord.model.DiscordMentionData;
 import com.denisnumb.discord_chat_mod.discord.utils.DiscordMentionsUtils;
 import com.denisnumb.discord_chat_mod.discord.utils.EmbedToComponentConverter;
 import com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownToComponentConverter;
 import net.dv8tion.jda.api.entities.*;
@@ -105,7 +106,7 @@ public class DiscordEvents extends ListenerAdapter {
                     );
                 },
                 () -> {
-                    String message = ServerLocaleProvider.Discord.forwardedGuildMessage(event.getMember().getEffectiveName(), event.getGuild().getName()) + "\n" + messageContent;
+                    String message = DiscordLocaleProvider.Discord.forwardedGuildMessage(event.getMember().getEffectiveName(), event.getGuild().getName()) + "\n" + messageContent;
                     prepareDiscordMessage(
                             guildContext.defaultChannel,
                             new DiscordChatStyleProvider.DiscordMessageComponents(
@@ -189,7 +190,7 @@ public class DiscordEvents extends ListenerAdapter {
                 ? rawPreview.substring(0, 50) + "..."
                 : rawPreview;
 
-        return ServerLocaleProvider.replyComponent(replyAuthor)
+        return MinecraftLocaleProvider.reply(replyAuthor)
                 .append(" ")
                 .withColor(0x7A7A7A)
                 .withStyle(style -> style
@@ -260,7 +261,7 @@ public class DiscordEvents extends ListenerAdapter {
             return Optional.empty();
 
         StickerItem sticker = message.getStickers().getFirst();
-        Component part = ServerLocaleProvider.stickerComponent(sticker.getName())
+        Component part = MinecraftLocaleProvider.sticker(sticker.getName())
                 .withStyle(style -> style
                         .withItalic(true)
                         .withClickEvent(new ClickEvent.OpenUrl(URI.create(sticker.getIconUrl())))

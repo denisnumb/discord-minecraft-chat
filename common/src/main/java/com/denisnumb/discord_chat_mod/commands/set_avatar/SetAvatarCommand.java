@@ -1,7 +1,7 @@
 package com.denisnumb.discord_chat_mod.commands.set_avatar;
 
 import com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownToComponentConverter;
 import com.mojang.brigadier.CommandDispatcher;
@@ -22,7 +22,7 @@ public class SetAvatarCommand {
                             String url = StringArgumentType.getString(context, "url");
 
                             if (!ImageUtils.isImageUrl(ImageUtils.getMimeType(url)))
-                                throw new SimpleCommandExceptionType(ServerLocaleProvider.Command.SetAvatarUrl.Error.invalidUrlComponent()).create();
+                                throw new SimpleCommandExceptionType(MinecraftLocaleProvider.Command.SetAvatarUrl.Error.invalidUrl()).create();
 
                             ServerPlayer player = context.getSource().getPlayer();
                             if (player == null)
@@ -30,11 +30,11 @@ public class SetAvatarCommand {
 
                             AvatarUrlStorage.setUrl(player.getUUID(), url, context.getSource().getServer());
 
-                            player.sendSystemMessage(
-                                    new MarkdownToComponentConverter(MarkdownParser.parseMarkdown(
-                                            ServerLocaleProvider.Command.SetAvatarUrl.success(url)
-                                    )).convertMarkdownTokensToComponent()
-                            );
+                            player.sendSystemMessage(MinecraftLocaleProvider.Command.SetAvatarUrl.success(
+                                    new MarkdownToComponentConverter(
+                                            MarkdownParser.parseMarkdown(url)
+                                    ).convertMarkdownTokensToComponent()
+                            ));
                             return 1;
                         })
                 )
@@ -47,7 +47,7 @@ public class SetAvatarCommand {
                         return 0;
 
                     AvatarUrlStorage.removeUrl(player.getUUID(), context.getSource().getServer());
-                    player.sendSystemMessage(ServerLocaleProvider.Command.RemoveAvatarUrl.successComponent()
+                    player.sendSystemMessage(MinecraftLocaleProvider.Command.RemoveAvatarUrl.success()
                             .setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)));
                     return 1;
                 })

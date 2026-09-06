@@ -5,7 +5,7 @@ import com.denisnumb.discord_chat_mod.DeathMessageUtils;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.config.IConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
@@ -101,7 +101,7 @@ public class DiscordChatStyleProvider {
         );
 
         return String.format(
-                config.discordPlayerDeathCauseStyle().replace(DEATH_CAUSE, ServerLocaleProvider.getTranslate(components.deathCauseLocaleKey())),
+                config.discordPlayerDeathCauseStyle().replace(DEATH_CAUSE, DiscordLocaleProvider.getTranslate(components.deathCauseLocaleKey())),
                 playerTemplate,
                 killerTemplate,
                 weaponTemplate
@@ -110,7 +110,7 @@ public class DiscordChatStyleProvider {
 
     private static String getTranslatedComponent(Component component){
         return component.getContents() instanceof TranslatableContents tc
-                ? ServerLocaleProvider.getTranslate(tc.getKey())
+                ? DiscordLocaleProvider.getTranslate(tc.getKey())
                 : component.getString();
     }
 
@@ -208,7 +208,7 @@ public class DiscordChatStyleProvider {
 
     private static String setConfigTemplateTranslatableParameters(String configTemplate, String... translatableParameters) {
         for (String param : translatableParameters)
-            configTemplate = configTemplate.replace(param, clearTranslatedString(ServerLocaleProvider.getTranslate(unwrapBraces(param))));
+            configTemplate = configTemplate.replace(param, clearTranslatedString(DiscordLocaleProvider.getTranslate(unwrapBraces(param))));
 
         return configTemplate;
     }

@@ -6,7 +6,7 @@ import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.CustomEmojiProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.StickersProvider;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -39,7 +39,7 @@ public class ReloadConfigCommand {
                         loadLocalization();
 
                         if (ctx.getSource().getPlayer() instanceof ServerPlayer player)
-                            player.sendSystemMessage(ServerLocaleProvider.Command.ReloadConfig.successComponent());
+                            player.sendSystemMessage(MinecraftLocaleProvider.Command.ReloadConfig.success());
 
                         isReloadingNow = false;
 

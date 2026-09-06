@@ -21,10 +21,8 @@ public abstract class GenerateLocaleProviderTask extends DefaultTask {
     private static final String ROOT_PREFIX = "discord_chat_mod";
     private static final String PACKAGE_NAME = "com.denisnumb.discord_chat_mod.locale";
 
-    private static final String CLIENT_CLASS_NAME = "ClientLocaleProvider";
-    private static final String SERVER_CLASS_NAME = "ServerLocaleProvider";
-
-    private static final String LOCALE_STORAGE_FQN = "com.denisnumb.discord_chat_mod.locale.LocaleStorage";
+    private static final String MINECRAFT_CLASS_NAME = "MinecraftLocaleProvider";
+    private static final String DISCORD_CLASS_NAME = "DiscordLocaleProvider";
 
     private static final Pattern PLACEHOLDER = Pattern.compile("%(\\d+\\$)?([sd])");
 
@@ -58,14 +56,14 @@ public abstract class GenerateLocaleProviderTask extends DefaultTask {
                 .resolve(PACKAGE_NAME.replace('.', '/'));
         Files.createDirectories(outDir);
 
-        String clientSource = renderClass(root, jsonPath.getFileName().toString(), Mode.CLIENT);
-        String serverSource = renderClass(root, jsonPath.getFileName().toString(), Mode.SERVER);
+        String minecraftSource = renderClass(root, jsonPath.getFileName().toString(), Side.MINECRAFT);
+        String discordSource = renderClass(root, jsonPath.getFileName().toString(), Side.DISCORD);
 
-        Files.writeString(outDir.resolve(CLIENT_CLASS_NAME + ".java"), clientSource);
-        Files.writeString(outDir.resolve(SERVER_CLASS_NAME + ".java"), serverSource);
+        Files.writeString(outDir.resolve(MINECRAFT_CLASS_NAME + ".java"), minecraftSource);
+        Files.writeString(outDir.resolve(DISCORD_CLASS_NAME + ".java"), discordSource);
     }
 
-    private enum Mode { CLIENT, SERVER }
+    private enum Side { MINECRAFT, DISCORD }
 
     private static class Node {
         final String name;
@@ -109,49 +107,48 @@ public abstract class GenerateLocaleProviderTask extends DefaultTask {
         insert(child, parts, idx + 1, fullKey, value);
     }
 
-    private String renderClass(Node root, String sourceFileName, Mode mode) {
-        String className = mode == Mode.CLIENT ? CLIENT_CLASS_NAME : SERVER_CLASS_NAME;
+    private String renderClass(Node root, String sourceFileName, Side side) {
+        String className = side == Side.MINECRAFT ? MINECRAFT_CLASS_NAME : DISCORD_CLASS_NAME;
 
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(PACKAGE_NAME).append(";\n\n");
-        sb.append("import net.minecraft.network.chat.Component;\n");
-        sb.append("import net.minecraft.network.chat.MutableComponent;\n");
-        if (mode == Mode.SERVER) {
-            sb.append("import ").append(LOCALE_STORAGE_FQN).append(";\n");
+        if (side == Side.MINECRAFT){
+            sb.append("import net.minecraft.network.chat.Component;\n");
+            sb.append("import net.minecraft.network.chat.MutableComponent;\n");
+            sb.append("\n");
         }
-        sb.append("\n");
         sb.append("// ============================================================\n");
         sb.append("// AUTO GENERATED FILE. DO NOT EDIT MANUALLY.\n");
         sb.append("// Source: ").append(sourceFileName).append("\n");
         sb.append("// ============================================================\n");
         sb.append("public final class ").append(className).append(" {\n");
         sb.append("    private ").append(className).append("() {}\n\n");
-        if (mode == Mode.SERVER){
+        if (side == Side.DISCORD){
             sb.append("    public static String getTranslate(String key) {\n")
                     .append("        return LocaleStorage.getTranslate(key);\n")
                     .append("    }\n\n");
         }
-        writeNode(sb, root, 1, mode);
+        writeNode(sb, root, 1, side);
         sb.append("}\n");
         return sb.toString();
     }
 
-    private void writeNode(StringBuilder sb, Node node, int depth, Mode mode) {
+    private void writeNode(StringBuilder sb, Node node, int depth, Side side) {
         String indent = "    ".repeat(depth);
         for (Node child : node.children.values()) {
             if (child.isLeaf()) {
-                writeLeaf(sb, child, indent, mode);
+                writeLeaf(sb, child, indent, side);
             } else {
                 String className = toPascalCase(child.name);
                 sb.append(indent).append("public static final class ").append(className).append(" {\n");
                 sb.append(indent).append("    private ").append(className).append("() {}\n\n");
-                writeNode(sb, child, depth + 1, mode);
+                writeNode(sb, child, depth + 1, side);
                 sb.append(indent).append("}\n\n");
             }
         }
     }
 
-    private void writeLeaf(StringBuilder sb, Node leaf, String indent, Mode mode) {
+    private void writeLeaf(StringBuilder sb, Node leaf, String indent, Side side) {
         List<String> placeholderTypes = extractPlaceholderTypes(leaf.leafValue);
         String methodName = toCamelCase(leaf.name);
 
@@ -172,12 +169,15 @@ public abstract class GenerateLocaleProviderTask extends DefaultTask {
         String argList = args.toString();
         String argListWithLeadingComma = argList.isEmpty() ? "" : ", " + argList;
 
-        if (mode == Mode.CLIENT) {
+        if (side == Side.MINECRAFT) {
             sb.append(indent).append("/** <pre>{@code ").append(escapedValue).append(" }</pre> */\n");
             sb.append(indent).append("public static MutableComponent ").append(methodName)
                     .append("(").append(paramList).append(") {\n");
-            sb.append(indent).append("    return Component.translatable(").append(keyString)
-                    .append(argListWithLeadingComma).append(");\n");
+            sb.append(indent).append("    return Component.translatableWithFallback(")
+                    .append(keyString)
+                    .append(", LocaleStorage.getTranslate(").append(keyString).append(")")
+                    .append(argListWithLeadingComma)
+                    .append(");\n");
             sb.append(indent).append("}\n\n");
             return;
         }
@@ -191,13 +191,6 @@ public abstract class GenerateLocaleProviderTask extends DefaultTask {
             sb.append(indent).append("    return String.format(LocaleStorage.getTranslate(")
                     .append(keyString).append("), ").append(argList).append(");\n");
         }
-        sb.append(indent).append("}\n\n");
-
-        sb.append(indent).append("/** <pre>{@code ").append(escapedValue).append(" }</pre> */\n");
-        sb.append(indent).append("public static MutableComponent ").append(methodName).append("Component")
-                .append("(").append(paramList).append(") {\n");
-        sb.append(indent).append("    return Component.literal(").append(methodName).append("(")
-                .append(argList).append("));\n");
         sb.append(indent).append("}\n\n");
     }
 

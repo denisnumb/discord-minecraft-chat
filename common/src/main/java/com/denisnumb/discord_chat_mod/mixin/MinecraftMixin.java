@@ -5,7 +5,7 @@ import com.denisnumb.discord_chat_mod.chat_images.ImageSendScreen;
 import com.denisnumb.discord_chat_mod.chat_images.ImageStorage;
 import com.denisnumb.discord_chat_mod.chat_images.model.AbstractImage;
 import com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils;
-import com.denisnumb.discord_chat_mod.locale.ClientLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -56,7 +56,7 @@ public abstract class MinecraftMixin {
 
         if (file.length() > MAX_DRAG_DROP_FILE_SIZE) {
             mc.execute(() -> MinecraftUtils.showTitleBarMessage(
-                    ClientLocaleProvider.SendImage.Error.fileTooLarge(MAX_DRAG_DROP_FILE_SIZE_MB)
+                    MinecraftLocaleProvider.SendImage.Error.fileTooLarge(MAX_DRAG_DROP_FILE_SIZE_MB)
             ));
             return;
         }
@@ -71,7 +71,7 @@ public abstract class MinecraftMixin {
                 AbstractImage image = ImageStorage.registerImageFromBytes(imagePreviewUrl, mimeType, imageBytes);
                 mc.setScreen(new ImageSendScreen(image, imageBytes, mimeType, file.getName(), mc.screen, mc.player));
             } catch (Exception e) {
-                MinecraftUtils.showTitleBarMessage(ClientLocaleProvider.SendImage.Error.readFile(e.getMessage()));
+                MinecraftUtils.showTitleBarMessage(MinecraftLocaleProvider.SendImage.Error.readFile(e.getMessage()));
                 discord_chat_mod$LOGGER.error("ReadImageFromFileError: ", e);
             }
         });

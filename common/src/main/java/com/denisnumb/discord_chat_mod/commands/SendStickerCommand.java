@@ -4,7 +4,8 @@ import com.denisnumb.discord_chat_mod.discord.data_providers.StickersProvider;
 import com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider;
 import com.denisnumb.discord_chat_mod.discord.chat_style.MessageType;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -40,14 +41,16 @@ public class SendStickerCommand {
                                     StickersProvider.StickerData stickerData = StickersProvider.getNameToStickerDataMap().get(stickerName);
 
                                     if (stickerData == null)
-                                        throw new SimpleCommandExceptionType(ServerLocaleProvider.Command.SendSticker.Error.unknownStickerComponent(stickerName)).create();
+                                        throw new SimpleCommandExceptionType(MinecraftLocaleProvider.Command.SendSticker.Error.unknownSticker(stickerName)).create();
 
                                     if (context.getSource().getEntity() instanceof ServerPlayer player) {
-                                        String stickerMessageContent = ServerLocaleProvider.sticker(stickerData.originalName());
+                                        String stickerMessageContent = DiscordLocaleProvider.sticker(stickerData.originalName());
 
-                                        Component messageWithStickerComponent = Component.literal(stickerMessageContent)
-                                                .withStyle(style -> style.withItalic(true)
-                                                        .withClickEvent(new ClickEvent.OpenUrl(URI.create(stickerData.imageUrl()))));
+                                        Component messageWithStickerComponent = MinecraftLocaleProvider.sticker(stickerData.originalName())
+                                                .withStyle(style -> style
+                                                        .withItalic(true)
+                                                        .withClickEvent(new ClickEvent.OpenUrl(URI.create(stickerData.imageUrl())))
+                                        );
 
                                         sendMessageToAllPlayersFromPlayer(player, messageWithStickerComponent);
 

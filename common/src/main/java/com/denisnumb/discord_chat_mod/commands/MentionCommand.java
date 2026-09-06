@@ -6,7 +6,7 @@ import com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils;
 import com.denisnumb.discord_chat_mod.discord.chat_style.MessageType;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordUserData;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.StringRange;
@@ -43,7 +43,7 @@ public class MentionCommand {
                                     List<DiscordUserData> memberData = ChannelMembersProvider.getMemberData(ChannelCategory.PLAYER_CHAT);
 
                                     if (!isDiscordConnected()) {
-                                        throw new SimpleCommandExceptionType(ServerLocaleProvider.Server.discordNotConnectedComponent()).create();
+                                        throw new SimpleCommandExceptionType(MinecraftLocaleProvider.Server.discordNotConnected()).create();
                                     }
 
                                     Optional<DiscordUserData> optionalMemberData = memberData.stream()
@@ -52,7 +52,7 @@ public class MentionCommand {
 
                                     if (optionalMemberData.isEmpty()) {
                                         throw new SimpleCommandExceptionType(
-                                                ServerLocaleProvider.Command.Mention.Error.unknownMentionComponent(name)
+                                                MinecraftLocaleProvider.Command.Mention.Error.unknownMention(name)
                                         ).create();
                                     }
 

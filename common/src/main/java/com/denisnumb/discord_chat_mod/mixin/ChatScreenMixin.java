@@ -10,7 +10,7 @@ import com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils;
 import com.denisnumb.discord_chat_mod.chat_images.widgets.AttachImageWidget;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.config.IConfigProvider;
-import com.denisnumb.discord_chat_mod.locale.ClientLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -87,10 +87,10 @@ public abstract class ChatScreenMixin extends Screen {
             if (imageBytes.length == 0)
                 return;
 
-            discord_minecraft_chat$openImageSendScreen(imageBytes, ClientLocaleProvider.image().getString());
+            discord_minecraft_chat$openImageSendScreen(imageBytes, MinecraftLocaleProvider.image().getString());
             cir.setReturnValue(true);
         } catch (IllegalStateException e) {
-            MinecraftUtils.showTitleBarMessage(ClientLocaleProvider.SendImage.Error.readClipboard(e.getMessage()));
+            MinecraftUtils.showTitleBarMessage(MinecraftLocaleProvider.SendImage.Error.readClipboard(e.getMessage()));
             discord_chat_mod$LOGGER.error("ClipboardImagePasteError: ", e);
         }
     }
@@ -111,7 +111,7 @@ public abstract class ChatScreenMixin extends Screen {
                             try {
                                 discord_minecraft_chat$openImageSendScreen(
                                         Files.readAllBytes(screenshotFile.toPath()),
-                                        ClientLocaleProvider.screenshot().getString()
+                                        MinecraftLocaleProvider.screenshot().getString()
                                 );
                             } catch (IOException ignored) {}
                         }
@@ -148,7 +148,7 @@ public abstract class ChatScreenMixin extends Screen {
                 filters.flip();
 
                 path = TinyFileDialogs.tinyfd_openFileDialog(
-                        ClientLocaleProvider.SendImage.selectImage().getString(),
+                        MinecraftLocaleProvider.SendImage.selectImage().getString(),
                         "",
                         filters,
                         "Image Files (png, jpg, gif, webp, bmp)",
@@ -163,14 +163,14 @@ public abstract class ChatScreenMixin extends Screen {
                 try {
                     Path filePath = Path.of(path);
                     if (Files.size(filePath) > MAX_DRAG_DROP_FILE_SIZE) {
-                        MinecraftUtils.showTitleBarMessage(ClientLocaleProvider.SendImage.Error.fileTooLarge(MAX_DRAG_DROP_FILE_SIZE_MB));
+                        MinecraftUtils.showTitleBarMessage(MinecraftLocaleProvider.SendImage.Error.fileTooLarge(MAX_DRAG_DROP_FILE_SIZE_MB));
                         return;
                     }
 
                     byte[] imageBytes = Files.readAllBytes(filePath);
                     discord_minecraft_chat$openImageSendScreen(imageBytes, filePath.getFileName().toString());
                 } catch (IOException e) {
-                    MinecraftUtils.showTitleBarMessage(ClientLocaleProvider.SendImage.Error.readFile(e.getMessage()));
+                    MinecraftUtils.showTitleBarMessage(MinecraftLocaleProvider.SendImage.Error.readFile(e.getMessage()));
                     discord_chat_mod$LOGGER.error("ReadImageFromFileError: ", e);
                 }
             });

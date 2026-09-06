@@ -7,7 +7,7 @@ import com.denisnumb.discord_chat_mod.chat_images.widgets.FlowButtonLayout;
 import com.denisnumb.discord_chat_mod.chat_images.widgets.FlowButtonLayout.ButtonSlot;
 import com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils;
 import com.denisnumb.discord_chat_mod.chat_images.widgets.PlayerSelectionPopup;
-import com.denisnumb.discord_chat_mod.locale.ClientLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.denisnumb.discord_chat_mod.network.image.ImageTransceiver;
 import com.denisnumb.discord_chat_mod.network.image.model.ImagePartPacketPayload;
 import com.denisnumb.discord_chat_mod.network.image.model.SendTarget;
@@ -114,13 +114,13 @@ public class ImageSendScreen extends Screen {
         int aboveButtonsY = topRowY - 26;
 
         spoilerCheckbox = Checkbox.builder(
-                ClientLocaleProvider.SendImage.Screen.sendAsSpoiler(),
+                MinecraftLocaleProvider.SendImage.Screen.sendAsSpoiler(),
                 this.font
         ).pos((this.width - imageNameBoxWidth) / 2 + imageNameBoxWidth / 2, aboveButtonsY).build();
         addRenderableWidget(spoilerCheckbox);
 
         imageNameBox = new EditBox(this.font, 0, 0, imageNameBoxWidth, 20, Component.literal(""));
-        imageNameBox.setHint(ClientLocaleProvider.SendImage.Screen.imageDisplayName());
+        imageNameBox.setHint(MinecraftLocaleProvider.SendImage.Screen.imageDisplayName());
         imageNameBox.setMaxLength(64);
         imageNameBox.setPosition(spoilerCheckbox.getX() - imageNameBoxWidth - BUTTON_SPACING, aboveButtonsY);
         imageNameBox.setValue(defaultImageDisplayName);
@@ -133,10 +133,10 @@ public class ImageSendScreen extends Screen {
         PlayerTeam team = localPlayer.getTeam();
 
         List<ActionDef> defs = new ArrayList<>();
-        defs.add(new ActionDef(ClientLocaleProvider.SendImage.Screen.sendPublic(), btn -> sendPublic()));
+        defs.add(new ActionDef(MinecraftLocaleProvider.SendImage.Screen.sendPublic(), btn -> sendPublic()));
 
         if (!otherPlayers.isEmpty()) {
-            defs.add(new ActionDef(ClientLocaleProvider.SendImage.Screen.sendToPlayers(), btn -> {
+            defs.add(new ActionDef(MinecraftLocaleProvider.SendImage.Screen.sendToPlayers(), btn -> {
                 setMainControlsVisible(false);
                 playerSelectionPopup.show(this.width, this.height, getOtherPlayers());
             }));
@@ -144,9 +144,9 @@ public class ImageSendScreen extends Screen {
 
         if (team != null) {
             String teamName = team.getDisplayName().getString();
-            defs.add(new ActionDef(ClientLocaleProvider.SendImage.Screen.sendToTeam(teamName), btn -> sendToTeam(team)));
+            defs.add(new ActionDef(MinecraftLocaleProvider.SendImage.Screen.sendToTeam(teamName), btn -> sendToTeam(team)));
         }
-        defs.add(new ActionDef(ClientLocaleProvider.cancel(), btn -> cancelAndRestorePreviousScreen()));
+        defs.add(new ActionDef(MinecraftLocaleProvider.cancel(), btn -> cancelAndRestorePreviousScreen()));
 
         return defs;
     }
@@ -236,7 +236,7 @@ public class ImageSendScreen extends Screen {
 
         String displayName = imageNameBox.getValue();
         if (displayName.isBlank())
-            displayName = ClientLocaleProvider.image().getString();
+            displayName = MinecraftLocaleProvider.image().getString();
 
         return new ImagePartPacketPayload(null, fileName, imageMimeType, displayName, sendTarget, imageBytes);
     }

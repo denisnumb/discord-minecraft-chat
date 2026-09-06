@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.chat_images.widgets;
 
-import com.denisnumb.discord_chat_mod.locale.ClientLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -93,12 +93,12 @@ public class PlayerSelectionPopup {
         addWidget.accept(playerList);
 
         searchBox = new EditBox(minecraft.font, popupX + 4, popupY + 28, listWidth - 8, 16, Component.literal(""));
-        searchBox.setHint(ClientLocaleProvider.SendImage.Screen.playerSearch());
+        searchBox.setHint(MinecraftLocaleProvider.SendImage.Screen.playerSearch());
         searchBox.setResponder(text -> playerList.setFilter(text));
         addWidget.accept(searchBox);
         searchBox.setFocused(true);
 
-        confirmButton = Button.builder(ClientLocaleProvider.send(), btn -> onConfirm.run())
+        confirmButton = Button.builder(MinecraftLocaleProvider.send(), btn -> onConfirm.run())
                 .pos(popupX + 4, popupY + totalHeight - FOOTER_HEIGHT + 6)
                 .size(listWidth - 8, 20)
                 .build();
@@ -144,7 +144,7 @@ public class PlayerSelectionPopup {
         graphics.fill(innerX, innerY, innerX + innerWidth, bounds.y() + bounds.height() - 2, 0xCC1a1a1a);
 
         graphics.drawCenteredString(font,
-                ClientLocaleProvider.SendImage.Screen.selectPlayers(),
+                MinecraftLocaleProvider.SendImage.Screen.selectPlayers(),
                 screenWidth / 2, innerY + 9, ARGB.color(0xFFFFFF, -1));
 
         graphics.fill(innerX + 4, innerY + HEADER_HEIGHT - 2,

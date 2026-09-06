@@ -6,7 +6,7 @@ import com.denisnumb.discord_chat_mod.discord.chat_style.MessageType;
 import com.denisnumb.discord_chat_mod.chat_style.Parameters;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordGuildContext;
-import com.denisnumb.discord_chat_mod.locale.ServerLocaleProvider;
+import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
 import com.mojang.logging.LogUtils;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
@@ -161,7 +161,7 @@ public class ServerStatusController {
     }
 
     private static String getOnlineCountString() {
-        return ServerLocaleProvider.Server.Status.onlinePlayers(
+        return DiscordLocaleProvider.Server.Status.onlinePlayers(
                 getServerPlayerCount(server),
                 getServerMaxPlayers(server)
         );
