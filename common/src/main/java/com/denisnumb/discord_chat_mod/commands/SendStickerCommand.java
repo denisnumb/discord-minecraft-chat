@@ -20,8 +20,8 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.sendMessageToAllPlayersFromPlayer;
-import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.mergeMaps;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.sendMessageToAllPlayersFromPlayer;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.*;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.handleDiscord;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.sendMessageFromPlayer;

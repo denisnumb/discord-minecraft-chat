@@ -12,11 +12,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static com.denisnumb.discord_chat_mod.DeathMessageUtils.*;
+import static com.denisnumb.discord_chat_mod.utils.DeathMessageUtils.*;
 import static com.denisnumb.discord_chat_mod.chat_style.CustomChatTypeRegistry.*;
 import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.*;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.newLinkedHashMapOf;
 
 public class MinecraftChatStyleProvider {
     private static Component applyStyleToAdvancement(Component translatableTitle, Component translatableDescription, Style advancementStyle) {

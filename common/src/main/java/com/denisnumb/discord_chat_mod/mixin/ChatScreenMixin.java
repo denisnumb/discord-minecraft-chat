@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.mixin;
 
-import com.denisnumb.discord_chat_mod.MinecraftUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.denisnumb.discord_chat_mod.chat_images.ImageScreen;
 import com.denisnumb.discord_chat_mod.chat_images.ImageSendScreen;
 import com.denisnumb.discord_chat_mod.chat_images.ImageStorage;

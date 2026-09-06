@@ -8,6 +8,7 @@ import com.denisnumb.discord_chat_mod.config.IConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.chat_style.MessageType;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.markdown.ComponentToMarkdownConverter;
+import com.denisnumb.discord_chat_mod.utils.DeathMessageUtils;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.DisplayInfo;
@@ -27,14 +28,14 @@ import java.util.Optional;
 
 import com.denisnumb.discord_chat_mod.compat.VanishCompatProvider;
 
-import static com.denisnumb.discord_chat_mod.AdvancementIconParser.parseAdvancementIcon;
-import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.mergeMaps;
+import static com.denisnumb.discord_chat_mod.utils.AdvancementIconParser.parseAdvancementIcon;
 import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.getAllContexts;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.ServerStatusController.updateServerStatusWithDelay;
 import static com.denisnumb.discord_chat_mod.chat_style.MinecraftChatStyleProvider.*;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 
 public class MinecraftEvents {
     public static void handleRegisterCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {

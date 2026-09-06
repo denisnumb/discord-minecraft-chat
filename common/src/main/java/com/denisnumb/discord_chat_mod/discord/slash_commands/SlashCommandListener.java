@@ -26,8 +26,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.DISCORD_GREEN_COLOR;
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.DISCORD_RED_COLOR;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.DISCORD_GREEN_COLOR;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.DISCORD_RED_COLOR;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.LOGGER;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.server;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.getDiscordMessageComponents;

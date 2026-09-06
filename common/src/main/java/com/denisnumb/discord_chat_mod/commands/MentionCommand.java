@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.commands;
 
-import com.denisnumb.discord_chat_mod.MinecraftUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.denisnumb.discord_chat_mod.discord.data_providers.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils;
 import com.denisnumb.discord_chat_mod.discord.chat_style.MessageType;
@@ -26,8 +26,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.isDiscordConnected;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.sendMessageToAllPlayersFromPlayer;
-import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.mergeMaps;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.sendMessageToAllPlayersFromPlayer;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.*;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.MESSAGE;

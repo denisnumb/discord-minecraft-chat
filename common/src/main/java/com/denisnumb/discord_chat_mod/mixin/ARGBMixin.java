@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.mixin;
 
-import com.denisnumb.discord_chat_mod.ColorUtils;
+import com.denisnumb.discord_chat_mod.utils.ColorUtils;
 import net.minecraft.util.ARGB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

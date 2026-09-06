@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.markdown;
 
-import com.denisnumb.discord_chat_mod.MinecraftUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMentionData;
 import net.minecraft.network.chat.*;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHAT_LINK_COLOR;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.CHAT_LINK_COLOR;
 
 public class MarkdownToComponentConverter{
     private final MutableComponent result = Component.empty();

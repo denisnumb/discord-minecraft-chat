@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.parseColor;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.parseColor;
 
 public class MarkdownEditBoxParser extends MarkdownParser {
     public static List<MarkdownToken> parseMarkdown(String rawText){

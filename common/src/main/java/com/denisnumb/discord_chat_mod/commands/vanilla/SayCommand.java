@@ -14,9 +14,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.PlayerChatMessage;
 import java.util.Map;
 
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.processChatMessage;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.ProcessChatMessageResult;
-import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.mergeMaps;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.processChatMessage;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.ProcessChatMessageResult;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 import static com.denisnumb.discord_chat_mod.chat_style.CustomChatTypeRegistry.buildBound;
 import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.getAllContexts;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;

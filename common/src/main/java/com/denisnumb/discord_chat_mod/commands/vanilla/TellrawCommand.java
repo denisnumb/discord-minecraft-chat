@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.commands.vanilla;
 
-import com.denisnumb.discord_chat_mod.EmojiUtils;
+import com.denisnumb.discord_chat_mod.utils.EmojiUtils;
 import com.denisnumb.discord_chat_mod.discord.chat_style.MessageType;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.mojang.brigadier.CommandDispatcher;
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.getPlayerListBySelector;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.getPlayerListBySelector;
 import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.getAllContexts;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.getDiscordMessageComponents;

@@ -2,7 +2,7 @@ package com.denisnumb.discord_chat_mod.markdown;
 
 import java.util.List;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.getHexColor;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.getHexColor;
 
 public class MarkdownToken {
     public String rawText;

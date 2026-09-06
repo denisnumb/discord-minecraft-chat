@@ -1,7 +1,7 @@
 package com.denisnumb.discord_chat_mod.commands.vanilla;
 
 import com.denisnumb.discord_chat_mod.MinecraftEvents;
-import com.denisnumb.discord_chat_mod.MinecraftUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.denisnumb.discord_chat_mod.chat_style.CustomChatTypeRegistry;
 import com.denisnumb.discord_chat_mod.chat_style.MinecraftChatStyleProvider;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
@@ -21,7 +21,7 @@ import net.minecraft.server.players.PlayerList;
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.processChatMessage;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.processChatMessage;
 import static com.denisnumb.discord_chat_mod.chat_style.CustomChatTypeRegistry.buildBound;
 
 public class MsgCommand {

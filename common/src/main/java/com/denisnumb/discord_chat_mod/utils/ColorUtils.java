@@ -1,11 +1,10 @@
-package com.denisnumb.discord_chat_mod;
+package com.denisnumb.discord_chat_mod.utils;
 
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.RoleColors;
 import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.HashMap;
 
 public class ColorUtils {

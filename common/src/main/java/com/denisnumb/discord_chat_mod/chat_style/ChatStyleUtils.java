@@ -3,6 +3,7 @@ package com.denisnumb.discord_chat_mod.chat_style;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownToComponentConverter;
+import com.denisnumb.discord_chat_mod.utils.JavaUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -13,9 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,6 +28,8 @@ import static com.denisnumb.discord_chat_mod.chat_style.Parameters.X;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Y;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Z;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.DIMENSION;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.nullSafeElse;
 
 public class ChatStyleUtils {
     public static Component getStyledTranslatableMessage(
@@ -169,19 +170,12 @@ public class ChatStyleUtils {
 
     public static Map<String, Component> buildTimestampParameters(){
         HashMap<String, Component> result = new HashMap<>();
-        OffsetDateTime now = getDateTimeWithUtcOffset();
+        OffsetDateTime now = JavaUtils.getDateTimeWithUtcOffset(ConfigProvider.getConfig().utcOffsetHours());
         result.put(Parameters.HH, Component.literal(String.format("%02d", now.getHour())));
         result.put(Parameters.MM, Component.literal(String.format("%02d", now.getMinute())));
         result.put(Parameters.SS, Component.literal(String.format("%02d", now.getSecond())));
 
         return result;
-    }
-
-    public static OffsetDateTime getDateTimeWithUtcOffset(){
-        Instant nowUtc = Instant.now();
-        ZoneOffset offset = ZoneOffset.ofHours(ConfigProvider.getConfig().utcOffsetHours());
-
-        return nowUtc.atOffset(offset);
     }
 
     public static Map<String, String> buildPositionParameters(@Nullable Entity entity){
@@ -219,31 +213,6 @@ public class ChatStyleUtils {
                 .filter(word -> !word.isEmpty())
                 .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1))
                 .collect(Collectors.joining(" "));
-    }
-
-    @SafeVarargs
-    public static <T> Map<String, T> mergeMaps(Map<String, T>... parameterMaps){
-        return Arrays.stream(parameterMaps)
-                .flatMap(m -> m.entrySet().stream())
-                .filter(e -> e.getValue() != null)
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue
-                ));
-    }
-
-    @SafeVarargs
-    public static <K, V> LinkedHashMap<K, V> newLinkedHashMapOf(Map.Entry<? extends K, ? extends V>... entries) {
-        LinkedHashMap<K, V> map = new LinkedHashMap<>(entries.length);
-        for (Map.Entry<? extends K, ? extends V> entry : entries) {
-            map.put(entry.getKey(), entry.getValue());
-        }
-
-        return map;
-    }
-
-    private static <T> T nullSafeElse(T first, T second) {
-        return first != null ? first : second;
     }
 
     private static Style mergeStyles(Style main, Style second){

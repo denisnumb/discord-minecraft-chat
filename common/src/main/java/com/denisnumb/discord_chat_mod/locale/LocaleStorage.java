@@ -1,6 +1,7 @@
 package com.denisnumb.discord_chat_mod.locale;
 
 import com.denisnumb.discord_chat_mod.DiscordChatMod;
+import com.denisnumb.discord_chat_mod.utils.JavaUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -21,8 +22,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils.getInputStreamFromUrl;
 
 public final class LocaleStorage {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -59,7 +58,7 @@ public final class LocaleStorage {
             return;
 
         String url = String.format(BASE_GITHUB_URL + locale + ".json");
-        try (Reader reader = new InputStreamReader(getInputStreamFromUrl(url), StandardCharsets.UTF_8)) {
+        try (Reader reader = new InputStreamReader(JavaUtils.getInputStreamFromUrl(url), StandardCharsets.UTF_8)) {
             Map<String, String> data = GSON.fromJson(reader, TYPE);
             saveMinecraftLocaleToCache(locale, data);
             addLanguageData(data);

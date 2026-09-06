@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.*;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.COUNTER;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.PLAYER;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;

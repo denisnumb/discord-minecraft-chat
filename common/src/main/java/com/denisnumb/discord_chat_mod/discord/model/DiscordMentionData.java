@@ -1,11 +1,11 @@
 package com.denisnumb.discord_chat_mod.discord.model;
 
-import com.denisnumb.discord_chat_mod.ColorUtils;
+import com.denisnumb.discord_chat_mod.utils.ColorUtils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHANNEL_MENTION_COLOR;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.CHANNEL_MENTION_COLOR;
 import static com.denisnumb.discord_chat_mod.discord.data_providers.ChannelMembersProvider.getMemberDisplayName;
 
 public class DiscordMentionData {

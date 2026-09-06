@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.discord.model;
 
-import com.denisnumb.discord_chat_mod.ColorUtils;
+import com.denisnumb.discord_chat_mod.utils.ColorUtils;
 import net.dv8tion.jda.api.entities.RoleColors;
 
 public class DiscordUserData {

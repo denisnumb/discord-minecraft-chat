@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.parseColor;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.parseColor;
 
 public abstract class MarkdownParser {
     private static final Pattern[] colorTagPatterns = {

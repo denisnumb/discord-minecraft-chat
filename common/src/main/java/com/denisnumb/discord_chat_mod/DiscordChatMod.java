@@ -36,7 +36,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.*;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.ServerStatusController.initServerStatusController;
 import static com.denisnumb.discord_chat_mod.discord.ServerStatusController.updateServerStatusMessageToUnavailable;

@@ -1,4 +1,4 @@
-package com.denisnumb.discord_chat_mod;
+package com.denisnumb.discord_chat_mod.utils;
 
 import com.denisnumb.discord_chat_mod.discord.data_providers.CustomEmojiProvider;
 

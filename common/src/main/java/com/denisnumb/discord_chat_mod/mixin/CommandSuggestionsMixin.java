@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.mixin;
 
-import com.denisnumb.discord_chat_mod.ColorUtils;
+import com.denisnumb.discord_chat_mod.utils.ColorUtils;
 import com.denisnumb.discord_chat_mod.chat_images.model.AbstractImage;
 import com.denisnumb.discord_chat_mod.chat_images.model.AnimatedImage;
 import com.denisnumb.discord_chat_mod.chat_images.model.Image;

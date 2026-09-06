@@ -1,11 +1,12 @@
 package com.denisnumb.discord_chat_mod.discord.chat_style;
 
-import com.denisnumb.discord_chat_mod.ColorUtils;
-import com.denisnumb.discord_chat_mod.DeathMessageUtils;
+import com.denisnumb.discord_chat_mod.utils.ColorUtils;
+import com.denisnumb.discord_chat_mod.utils.DeathMessageUtils;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.config.IConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils;
 import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
+import com.denisnumb.discord_chat_mod.utils.JavaUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
@@ -29,6 +30,7 @@ import java.util.Optional;
 import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.*;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 
 public class DiscordChatStyleProvider {
     private static final Gson GSON = new Gson();
@@ -137,7 +139,7 @@ public class DiscordChatStyleProvider {
 
     public static Optional<DiscordMessageComponents> getDiscordMessageComponents(MessageType messageType, Map<String, String> parameterMap){
         IConfigProvider config = ConfigProvider.getConfig();
-        OffsetDateTime now = getDateTimeWithUtcOffset();
+        OffsetDateTime now = JavaUtils.getDateTimeWithUtcOffset(ConfigProvider.getConfig().utcOffsetHours());
 
         parameterMap = mergeMaps(
                 parameterMap,

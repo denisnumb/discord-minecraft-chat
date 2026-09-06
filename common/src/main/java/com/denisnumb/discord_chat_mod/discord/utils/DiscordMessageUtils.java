@@ -4,6 +4,7 @@ import com.denisnumb.discord_chat_mod.discord.data_providers.StickersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordGuildContext;
 import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
+import com.denisnumb.discord_chat_mod.utils.JavaUtils;
 import com.mojang.logging.LogUtils;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Webhook;
@@ -22,8 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.logErrorToServer;
-import static com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils.getInputStreamFromUrl;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.logErrorToServer;
 import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.*;
 import static com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
@@ -196,7 +196,7 @@ public class DiscordMessageUtils {
                         else{
                             try {
                                 mca.addFiles(FileUpload.fromData(
-                                        getInputStreamFromUrl(stickerData.imageUrl()).readAllBytes(),
+                                        JavaUtils.getInputStreamFromUrl(stickerData.imageUrl()).readAllBytes(),
                                         getStickerFileName(stickerData.imageUrl())
                                 ));
                             } catch (Exception ignored) {}

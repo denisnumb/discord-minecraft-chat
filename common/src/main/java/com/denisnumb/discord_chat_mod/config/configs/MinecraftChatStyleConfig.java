@@ -1,13 +1,13 @@
 package com.denisnumb.discord_chat_mod.config.configs;
 
-import com.denisnumb.discord_chat_mod.ColorUtils;
+import com.denisnumb.discord_chat_mod.utils.ColorUtils;
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 
 import java.util.Objects;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.parseColor;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.parseColor;
 import static com.denisnumb.discord_chat_mod.config.ConfigComments.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 

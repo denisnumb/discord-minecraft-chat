@@ -1,4 +1,4 @@
-package com.denisnumb.discord_chat_mod;
+package com.denisnumb.discord_chat_mod.utils;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.*;

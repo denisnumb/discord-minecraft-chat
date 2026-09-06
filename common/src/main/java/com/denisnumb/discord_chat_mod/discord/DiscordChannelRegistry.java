@@ -7,6 +7,7 @@ import com.denisnumb.discord_chat_mod.config.configs.DiscordGuildsConfig;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordGuildContext;
 import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
+import com.denisnumb.discord_chat_mod.utils.JavaUtils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
@@ -21,8 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.jda;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.*;
-import static com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils.getInputStreamFromUrl;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.*;
 
 public class DiscordChannelRegistry {
     private static final Map<String, DiscordGuildContext> GUILD_CONTEXTS = new HashMap<>();
@@ -62,7 +62,7 @@ public class DiscordChannelRegistry {
         try {
             webhookAvatar = webhookAvatarUrl == null
                     ? null
-                    : Icon.from(getInputStreamFromUrl(webhookAvatarUrl));
+                    : Icon.from(JavaUtils.getInputStreamFromUrl(webhookAvatarUrl));
         } catch (Exception ignored) {}
 
         for (DiscordGuildsConfig.DiscordGuildConfig guildConfig : guildConfigs){

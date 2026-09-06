@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.subFormattedCharSequence;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.subFormattedCharSequence;
 
 @Mixin(EditBox.class)
 public abstract class EditBoxMixin {

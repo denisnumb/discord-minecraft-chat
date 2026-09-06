@@ -1,7 +1,8 @@
 package com.denisnumb.discord_chat_mod.chat_images;
 
 import com.denisnumb.discord_chat_mod.DiscordChatMod;
-import com.denisnumb.discord_chat_mod.MinecraftUtils;
+import com.denisnumb.discord_chat_mod.utils.JavaUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.denisnumb.discord_chat_mod.chat_images.model.*;
 import com.denisnumb.discord_chat_mod.chat_images.model.Image;
 import com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils;
@@ -112,7 +113,7 @@ public class ImageStorage {
             HANDLED_URLS.add(url);
 
         if (isLocalResourceUrl(url))
-            return waitForLocalResource(IMAGE_CACHE, url, 15000, 50);
+            return JavaUtils.waitForLocalResource(IMAGE_CACHE, url, 15000, 50);
 
         String mimeType = getMimeType(url);
         if (isImageUrl(mimeType) || isGifPlatformUrl(url)) {
@@ -132,7 +133,7 @@ public class ImageStorage {
     }
 
     private static void registerImageFromUrl(String imageUrl, String mimeType) throws Exception {
-        try (InputStream input = getInputStreamFromUrl(imageUrl)) {
+        try (InputStream input = getImageInputStreamFromUrl(imageUrl)) {
             registerByMimeType(imageUrl, mimeType, input.readAllBytes());
         }
     }

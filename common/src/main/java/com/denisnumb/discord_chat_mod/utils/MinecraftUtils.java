@@ -1,5 +1,6 @@
-package com.denisnumb.discord_chat_mod;
+package com.denisnumb.discord_chat_mod.utils;
 
+import com.denisnumb.discord_chat_mod.MinecraftEvents;
 import com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils;
 import com.denisnumb.discord_chat_mod.chat_style.CustomChatTypeRegistry;
 import com.denisnumb.discord_chat_mod.chat_style.MinecraftChatStyleProvider;
@@ -41,6 +42,7 @@ import static com.denisnumb.discord_chat_mod.DiscordChatMod.server;
 import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.*;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.newLinkedHashMapOf;
 
 public class MinecraftUtils {
     private static final Logger LOGGER = LogUtils.getLogger();

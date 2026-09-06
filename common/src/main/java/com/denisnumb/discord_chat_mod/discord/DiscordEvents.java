@@ -1,8 +1,9 @@
 package com.denisnumb.discord_chat_mod.discord;
 
-import com.denisnumb.discord_chat_mod.ColorUtils;
-import com.denisnumb.discord_chat_mod.EmojiUtils;
-import com.denisnumb.discord_chat_mod.MinecraftUtils;
+import com.denisnumb.discord_chat_mod.utils.ColorUtils;
+import com.denisnumb.discord_chat_mod.utils.EmojiUtils;
+import com.denisnumb.discord_chat_mod.utils.JavaUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.ChannelMembersProvider;
@@ -30,11 +31,10 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHAT_LINK_COLOR;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.CHAT_LINK_COLOR;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.jda;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.server;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.getServerPlayerCount;
-import static com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils.getInputStreamFromUrl;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.getServerPlayerCount;
 import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.applyParametersToTemplate;
 import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.parseConfigTemplateMarkdown;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
@@ -74,7 +74,7 @@ public class DiscordEvents extends ListenerAdapter {
 
         for (Message.Attachment attachment : event.getMessage().getAttachments()) {
             try {
-                attachments.add(new WebhookUtils.WebhookAttachment(getInputStreamFromUrl(attachment.getUrl()).readAllBytes(), attachment.getFileName()));
+                attachments.add(new WebhookUtils.WebhookAttachment(JavaUtils.getInputStreamFromUrl(attachment.getUrl()).readAllBytes(), attachment.getFileName()));
             } catch (Exception ignored) {}
         }
 
@@ -82,7 +82,7 @@ public class DiscordEvents extends ListenerAdapter {
             StickerItem sticker = event.getMessage().getStickers().getFirst();
             try {
                 attachments.add(new WebhookUtils.WebhookAttachment(
-                        getInputStreamFromUrl(sticker.getIconUrl()).readAllBytes(),
+                        JavaUtils.getInputStreamFromUrl(sticker.getIconUrl()).readAllBytes(),
                         getStickerFileName(sticker.getIconUrl())
                 ));
             } catch (Exception ignored) {}

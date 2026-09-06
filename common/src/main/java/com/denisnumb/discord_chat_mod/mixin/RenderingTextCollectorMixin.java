@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import static com.denisnumb.discord_chat_mod.EmojiUtils.EMOJI_PATTERN;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.subFormattedCharSequence;
+import static com.denisnumb.discord_chat_mod.utils.EmojiUtils.EMOJI_PATTERN;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.subFormattedCharSequence;
 
 @Mixin(targets = "net.minecraft.client.gui.GuiGraphics$RenderingTextCollector")
 public abstract class RenderingTextCollectorMixin {

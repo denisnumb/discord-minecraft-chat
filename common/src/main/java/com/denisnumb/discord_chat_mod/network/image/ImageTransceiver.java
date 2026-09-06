@@ -1,7 +1,7 @@
 package com.denisnumb.discord_chat_mod.network.image;
 
 import com.denisnumb.discord_chat_mod.DiscordChatMod;
-import com.denisnumb.discord_chat_mod.MinecraftUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.denisnumb.discord_chat_mod.chat_images.ImageStorage;
 import com.denisnumb.discord_chat_mod.discord.chat_style.MessageType;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
@@ -29,11 +29,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHAT_LINK_COLOR;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.CHAT_LINK_COLOR;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.isDiscordConnected;
-import static com.denisnumb.discord_chat_mod.MinecraftUtils.*;
+import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
+import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.*;
 import static com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils.LOCAL_RESOURCE_PREFIX;
-import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.getAllContexts;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;

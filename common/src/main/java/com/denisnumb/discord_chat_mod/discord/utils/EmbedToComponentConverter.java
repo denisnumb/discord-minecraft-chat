@@ -1,6 +1,6 @@
 package com.denisnumb.discord_chat_mod.discord.utils;
 
-import com.denisnumb.discord_chat_mod.EmojiUtils;
+import com.denisnumb.discord_chat_mod.utils.EmojiUtils;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMentionData;
 import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
@@ -23,8 +23,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.CHAT_LINK_COLOR;
-import static com.denisnumb.discord_chat_mod.ColorUtils.Color.DISCORD_DEFAULT_COLOR;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.CHAT_LINK_COLOR;
+import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.DISCORD_DEFAULT_COLOR;
 
 public final class EmbedToComponentConverter {
     private static final int EMBED_LINE_MAX_LENGTH = 45;

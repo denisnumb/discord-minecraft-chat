@@ -3,7 +3,6 @@ package com.denisnumb.discord_chat_mod.chat_images.utils;
 import com.denisnumb.discord_chat_mod.chat_images.model.ImageSize;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.mojang.blaze3d.platform.NativeImage;
-import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,7 +14,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 import static com.denisnumb.discord_chat_mod.chat_images.ImageStorage.*;
 
@@ -91,7 +89,7 @@ public class ImageUtils {
         }
     }
 
-    public static InputStream getInputStreamFromUrl(String url) throws IOException, URISyntaxException {
+    public static InputStream getImageInputStreamFromUrl(String url) throws IOException, URISyntaxException {
         HttpURLConnection conn = (HttpURLConnection) new URI(url).toURL().openConnection();
         int loadTimeout = ConfigProvider.getConfig().imageLoadTimeoutMs();
         conn.setConnectTimeout(loadTimeout);
@@ -102,28 +100,6 @@ public class ImageUtils {
                         + "Chrome/124.0.0.0 Safari/537.36");
 
         return conn.getInputStream();
-    }
-
-    @Nullable
-    public static <K, V> V waitForLocalResource(Map<K, V> map, K key, long timeoutMillis, long pollIntervalMillis) {
-        long startTime = System.currentTimeMillis();
-
-        while (System.currentTimeMillis() - startTime < timeoutMillis) {
-            synchronized (map) {
-                if (map.containsKey(key)) {
-                    return map.get(key);
-                }
-            }
-
-            try {
-                Thread.sleep(pollIntervalMillis);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            }
-        }
-
-        return null;
     }
 
     public static byte[] convertToPngIfNeeded(byte[] imageBytes) throws IOException {
