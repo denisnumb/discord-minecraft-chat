@@ -32,7 +32,9 @@ import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.*;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.MESSAGE;
 
-public class MentionCommand {
+public final class MentionCommand {
+    private MentionCommand() {}
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("mention")

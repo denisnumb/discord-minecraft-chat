@@ -11,7 +11,9 @@ import java.util.List;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.LOGGER;
 
-public class DiscordSlashCommands {
+public final class DiscordSlashCommands {
+    private DiscordSlashCommands() {}
+
     private static SlashCommandListener listener;
 
     public static void register(JDA jda, List<DiscordGuildContext> guildContexts) {

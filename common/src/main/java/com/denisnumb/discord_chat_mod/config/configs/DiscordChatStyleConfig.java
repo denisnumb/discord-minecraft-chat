@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import static com.denisnumb.discord_chat_mod.config.ConfigComments.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 
-public class DiscordChatStyleConfig {
+public final class DiscordChatStyleConfig {
+    private DiscordChatStyleConfig() {}
+
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Gson GSON = new Gson();
 

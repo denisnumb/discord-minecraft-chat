@@ -23,7 +23,9 @@ import java.util.Optional;
 import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.processChatMessage;
 import static com.denisnumb.discord_chat_mod.chat_style.CustomChatTypeRegistry.buildBound;
 
-public class TeamMsgCommand {
+public final class TeamMsgCommand {
+    private TeamMsgCommand() {}
+
     private static final Style SUGGEST_STYLE;
     private static final SimpleCommandExceptionType ERROR_NOT_ON_TEAM;
 

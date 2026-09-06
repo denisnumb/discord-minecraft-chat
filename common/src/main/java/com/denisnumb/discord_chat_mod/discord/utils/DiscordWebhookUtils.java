@@ -88,7 +88,7 @@ public final class DiscordWebhookUtils {
 
                 return imageUrl;
             } catch (Exception e) {
-                LOGGER.error("SendWebhookError: " + e.getMessage(), e);
+                LOGGER.error("SendWebhookError: ", e);
                 return Optional.empty();
             }
         });

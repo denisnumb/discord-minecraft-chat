@@ -13,7 +13,9 @@ import java.util.*;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.MOD_ID;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 
-public class CustomChatTypeRegistry {
+public final class CustomChatTypeRegistry {
+    private CustomChatTypeRegistry() {}
+
     public static ResourceKey<ChatType> CHAT;
     public static ResourceKey<ChatType> SAY_COMMAND;
     public static ResourceKey<ChatType> MSG_COMMAND_INCOMING;

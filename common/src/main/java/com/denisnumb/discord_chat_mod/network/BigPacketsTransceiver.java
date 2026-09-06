@@ -2,7 +2,9 @@ package com.denisnumb.discord_chat_mod.network;
 
 import java.util.*;
 
-public class BigPacketsTransceiver {
+public final class BigPacketsTransceiver {
+    private BigPacketsTransceiver() {}
+
     @FunctionalInterface
     public interface SendFunction {
         void send(int partIndex, int totalParts, byte[] part);

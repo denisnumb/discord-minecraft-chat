@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MinecraftFormattingConverter {
-    private static final char SECTION_SIGN = '\u00A7';
+    private MinecraftFormattingConverter() {}
 
-    private MinecraftFormattingConverter() {
-    }
+    private static final char SECTION_SIGN = '\u00A7';
 
     public static String toDiscordMarkdown(String text) {
         if (text.indexOf(SECTION_SIGN) < 0)

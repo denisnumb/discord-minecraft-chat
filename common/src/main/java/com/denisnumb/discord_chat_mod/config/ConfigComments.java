@@ -4,7 +4,9 @@ import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 
-public class ConfigComments {
+public final class ConfigComments {
+    private ConfigComments() {}
+
     public static final String DISCORD_BOT_TOKEN_COMMENT = """
                      Read more about configuration here: https://github.com/denisnumb/discord-chat-mod/wiki\
 

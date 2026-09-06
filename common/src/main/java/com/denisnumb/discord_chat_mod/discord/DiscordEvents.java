@@ -42,7 +42,7 @@ import static com.denisnumb.discord_chat_mod.discord.utils.DiscordUrlsUtils.retr
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordWebhookUtils.sendWebhookWithFiles;
 
-public class DiscordEvents extends ListenerAdapter {
+public final class DiscordEvents extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.isWebhookMessage() || event.getAuthor().getId().equals(jda.getSelfUser().getId()))

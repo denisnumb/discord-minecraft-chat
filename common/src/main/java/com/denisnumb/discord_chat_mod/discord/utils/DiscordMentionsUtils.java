@@ -11,9 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class DiscordMentionsUtils {
-    private static final Pattern MENTION_PATTERN = Pattern.compile("<(@!?|@&|#)(\\d+)>");
-
     private DiscordMentionsUtils() {}
+    private static final Pattern MENTION_PATTERN = Pattern.compile("<(@!?|@&|#)(\\d+)>");
 
     public static Map<String, DiscordMentionData> collectMessageMentions(Message message) {
         Map<String, DiscordMentionData> mentions = new HashMap<>();

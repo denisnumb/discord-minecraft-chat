@@ -31,7 +31,9 @@ import static com.denisnumb.discord_chat_mod.chat_style.Parameters.PLAYER;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 
-public class ServerStatusController {
+public final class ServerStatusController {
+    private ServerStatusController() {}
+
     private static List<@Nullable Message> serverStatusMessages;
     @Nullable
     private static ScheduledExecutorService scheduler;

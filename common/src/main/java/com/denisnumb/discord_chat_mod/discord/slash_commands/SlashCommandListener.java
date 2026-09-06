@@ -34,7 +34,7 @@ import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyle
 import static com.denisnumb.discord_chat_mod.discord.slash_commands.permissions.SlashCommandPermissionUtils.getMemberPermissions;
 import static com.denisnumb.discord_chat_mod.discord.slash_commands.permissions.SlashCommandPermissionUtils.hasCommandPermission;
 
-public class SlashCommandListener extends ListenerAdapter {
+public final class SlashCommandListener extends ListenerAdapter {
     @Override
     public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event) {
         if (!event.getName().equals("cmd"))

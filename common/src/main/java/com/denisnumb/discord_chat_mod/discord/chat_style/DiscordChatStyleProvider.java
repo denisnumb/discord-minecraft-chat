@@ -32,7 +32,8 @@ import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.*;
 import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 
-public class DiscordChatStyleProvider {
+public final class DiscordChatStyleProvider {
+    private DiscordChatStyleProvider() {}
     private static final Gson GSON = new Gson();
     private static final Logger LOGGER = LogUtils.getLogger();
 

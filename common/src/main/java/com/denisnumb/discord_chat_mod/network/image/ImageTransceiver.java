@@ -38,7 +38,9 @@ import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.getA
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 
-public class ImageTransceiver {
+public final class ImageTransceiver {
+    private ImageTransceiver() {}
+
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(SendTarget.class, new SendTargetAdapter())
             .create();

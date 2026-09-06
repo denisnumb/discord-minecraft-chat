@@ -13,7 +13,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class DiscordUrlsUtils {
+public final class DiscordUrlsUtils {
+    private DiscordUrlsUtils() {}
+
     /**
      * Only retrieve embed URLs for Discord attachment links.
      * Don't retrieve embed URLs for other hosts as they may:

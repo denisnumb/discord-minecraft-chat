@@ -14,7 +14,9 @@ import java.util.stream.Stream;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.isDiscordConnected;
 
-public class ChannelMembersProvider {
+public final class ChannelMembersProvider {
+    private ChannelMembersProvider() {}
+
     private static long lastGetChannelMembers = 0;
     private static List<Member> cachedMembersList;
     public static List<DiscordUserData> CLIENT_MEMBER_CACHE = List.of();

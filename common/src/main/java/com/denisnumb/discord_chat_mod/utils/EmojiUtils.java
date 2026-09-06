@@ -7,6 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class EmojiUtils {
+    private EmojiUtils() {}
+
     public static final Pattern EMOJI_PATTERN = Pattern.compile(":([a-zA-Z0-9_]{2,}(~([1-9][0-9]*))?):");
     private static final Pattern DISCORD_MENTION_PATTERN = Pattern.compile("(?<!\\\\)<a?:[a-zA-Z0-9_]+:\\d+>");
     private static final Pattern ESCAPEABLE_EMOJI_PATTERN = Pattern.compile("(?<!\\\\):([a-zA-Z0-9_]{2,}(~[1-9][0-9]*)?):");

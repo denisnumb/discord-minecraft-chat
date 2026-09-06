@@ -23,7 +23,9 @@ import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 
-public class SayCommand {
+public final class SayCommand {
+    private SayCommand() {}
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher){
         dispatcher.register(
                 Commands.literal("say")

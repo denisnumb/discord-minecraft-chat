@@ -20,7 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.isDiscordConnected;
 
-public class ServerLogsRetranslator {
+public final class ServerLogsRetranslator {
+    private ServerLogsRetranslator() {}
+
     private static boolean DO_LOGGING = false;
 
     public static void init(String loggingLevel, String logPattern) {

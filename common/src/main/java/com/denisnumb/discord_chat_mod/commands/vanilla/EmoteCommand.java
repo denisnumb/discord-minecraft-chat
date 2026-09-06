@@ -27,7 +27,9 @@ import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.h
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.MESSAGE;
 
-public class EmoteCommand {
+public final class EmoteCommand {
+    private EmoteCommand() {}
+
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(Commands.literal("me").then(Commands.argument("action", MessageArgument.message()).executes((commandContext) -> {
             MessageArgument.resolveChatMessage(commandContext, "action", (playerChatMessage) -> {

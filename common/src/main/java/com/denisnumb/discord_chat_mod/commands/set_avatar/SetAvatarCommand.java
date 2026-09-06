@@ -14,7 +14,9 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
 
-public class SetAvatarCommand {
+public final class SetAvatarCommand {
+    private SetAvatarCommand() {}
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("set_avatar_url")
                 .then(Commands.argument("url", StringArgumentType.greedyString())

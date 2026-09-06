@@ -31,7 +31,9 @@ import static com.denisnumb.discord_chat_mod.discord.utils.DiscordWebhookUtils.*
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 
 
-public class DiscordMessageUtils {
+public final class DiscordMessageUtils {
+    private DiscordMessageUtils() {}
+
     private static final Logger LOGGER = LogUtils.getLogger();
     public record ImageData(String fileName, byte[] data){}
     private static ExecutorService EXECUTOR;

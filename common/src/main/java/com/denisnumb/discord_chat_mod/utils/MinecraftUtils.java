@@ -58,7 +58,9 @@ import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.*;
 import static com.denisnumb.discord_chat_mod.utils.JavaUtils.newLinkedHashMapOf;
 
-public class MinecraftUtils {
+public final class MinecraftUtils {
+    private MinecraftUtils() {}
+
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Style TEAMMSG_SUGGEST_STYLE = Style.EMPTY
             .withHoverEvent(new HoverEvent.ShowText(Component.translatable("chat.type.team.hover")))

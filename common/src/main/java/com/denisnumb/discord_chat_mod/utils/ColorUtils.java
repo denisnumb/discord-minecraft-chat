@@ -7,7 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
-public class ColorUtils {
+public final class ColorUtils {
+    private ColorUtils() {}
+
     public static class Color{
         public static final int TRANSPARENT_IMAGE_TAG_COLOR = -0xffffff;
         public static final int CHANNEL_MENTION_COLOR = 0x6974c9;

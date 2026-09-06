@@ -15,7 +15,9 @@ import net.minecraft.server.level.ServerPlayer;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 import static com.denisnumb.discord_chat_mod.locale.LocaleStorage.loadLocalization;
 
-public class ReloadConfigCommand {
+public final class ReloadConfigCommand {
+    private ReloadConfigCommand() {}
+
     public static boolean isReloadingNow = false;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher){

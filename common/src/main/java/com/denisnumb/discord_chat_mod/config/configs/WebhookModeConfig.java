@@ -9,7 +9,9 @@ import static com.denisnumb.discord_chat_mod.config.ConfigComments.WEBHOOK_PLAYE
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.WEBHOOK_PLAYER_DEFAULT_AVATAR_URL_DEFAULT;
 
-public class WebhookModeConfig {
+public final class WebhookModeConfig {
+    private WebhookModeConfig() {}
+
     public static boolean enableWebhookMode;
     public static String webhookServerName;
     public static String webhookServerAvatarUrl;

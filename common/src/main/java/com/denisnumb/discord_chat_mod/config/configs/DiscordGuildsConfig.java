@@ -11,7 +11,9 @@ import java.util.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigComments.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 
-public class DiscordGuildsConfig {
+public final class DiscordGuildsConfig {
+    private DiscordGuildsConfig() {}
+
     private static final Logger LOGGER = LogUtils.getLogger();
     public static List<DiscordGuildConfig> discordGuildConfigs;
 

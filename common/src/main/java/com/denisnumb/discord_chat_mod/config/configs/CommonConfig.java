@@ -5,7 +5,9 @@ import com.electronwill.nightconfig.core.CommentedConfig;
 import static com.denisnumb.discord_chat_mod.config.ConfigComments.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 
-public class CommonConfig {
+public final class CommonConfig {
+    private CommonConfig() {}
+
     public static String discordBotToken;
     public static String modLocale;
     public static int utcOffsetHours;

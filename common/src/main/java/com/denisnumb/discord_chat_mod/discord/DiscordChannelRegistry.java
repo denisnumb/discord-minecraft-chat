@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.jda;
 import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.*;
 
-public class DiscordChannelRegistry {
+public final class DiscordChannelRegistry {
+    private DiscordChannelRegistry() {}
+
     private static final Map<String, DiscordGuildContext> GUILD_CONTEXTS = new HashMap<>();
     private static Icon webhookAvatar;
 

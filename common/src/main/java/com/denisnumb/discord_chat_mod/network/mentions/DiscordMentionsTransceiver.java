@@ -19,7 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 
-public class DiscordMentionsTransceiver {
+public final class DiscordMentionsTransceiver {
+    private DiscordMentionsTransceiver() {}
+
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Map<Long, ArrayList<byte[]>> receivedParts = new HashMap<>();
     private static final Gson gson = new Gson();

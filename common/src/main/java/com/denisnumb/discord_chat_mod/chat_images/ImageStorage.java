@@ -35,7 +35,9 @@ import static com.denisnumb.discord_chat_mod.chat_images.utils.WebpUtils.*;
 import static com.denisnumb.discord_chat_mod.chat_images.utils.GifUtils.*;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.LOGGER;
 
-public class ImageStorage {
+public final class ImageStorage {
+    private ImageStorage() {}
+
     public static final float MAX_WIDTH = 128.0f;
     public static final float MAX_HEIGHT = 72.0f;
     public static final String OPEN_IMAGE_COMMAND = "open_image ";

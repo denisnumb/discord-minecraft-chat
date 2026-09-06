@@ -2,7 +2,9 @@ package com.denisnumb.discord_chat_mod.chat_images.clipboard;
 
 import static com.sun.jna.Platform.*;
 
-public class ClipboardImageUtils {
+public final class ClipboardImageUtils {
+    private ClipboardImageUtils() {}
+
     public static byte[] getImageBytes() throws IllegalStateException {
         return switch (detectPlatform()) {
             case WINDOWS -> new WindowsClipboardImageReader().read();

@@ -15,7 +15,9 @@ import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 
-public class GifUtils {
+public final class GifUtils {
+    private GifUtils() {}
+
     public static String getGiphyGifSourceUrl(String giphyUrl) throws IllegalArgumentException {
         String url = giphyUrl.stripTrailing();
         if (url.endsWith("/")) {

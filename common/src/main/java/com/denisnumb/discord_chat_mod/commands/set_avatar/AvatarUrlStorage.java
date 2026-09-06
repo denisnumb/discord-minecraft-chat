@@ -19,7 +19,9 @@ import java.util.Map;
 import java.util.UUID;
 
 
-public class AvatarUrlStorage {
+public final class AvatarUrlStorage {
+    private AvatarUrlStorage() {}
+
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String FILE_NAME = "discord_webhook_avatar_urls.json";

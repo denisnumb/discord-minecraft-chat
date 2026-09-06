@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class SendTargetAdapter implements JsonSerializer<SendTarget>, JsonDeserializer<SendTarget> {
+public final class SendTargetAdapter implements JsonSerializer<SendTarget>, JsonDeserializer<SendTarget> {
     @Override
     public JsonElement serialize(SendTarget src, Type type, JsonSerializationContext ctx) {
         JsonObject obj = new JsonObject();

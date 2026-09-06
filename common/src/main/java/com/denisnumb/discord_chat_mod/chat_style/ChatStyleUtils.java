@@ -31,7 +31,9 @@ import static com.denisnumb.discord_chat_mod.chat_style.Parameters.DIMENSION;
 import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 import static com.denisnumb.discord_chat_mod.utils.JavaUtils.nullSafeElse;
 
-public class ChatStyleUtils {
+public final class ChatStyleUtils {
+    private ChatStyleUtils() {}
+
     public static Component getStyledTranslatableMessage(
             MutableComponent template,
             String translatableParam,

@@ -19,7 +19,9 @@ import java.util.stream.IntStream;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.isDiscordConnected;
 
-public class CustomEmojiProvider {
+public final class CustomEmojiProvider {
+    private CustomEmojiProvider() {}
+
     public record EmojiData(String url, String mentionString) { }
     public static Map<String, AbstractImage> CLIENT_EMOJI_CACHE = new HashMap<>();
     private static long lastGetEmojiData = 0;

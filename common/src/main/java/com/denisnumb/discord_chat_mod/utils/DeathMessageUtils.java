@@ -18,7 +18,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
-public class DeathMessageUtils {
+public final class DeathMessageUtils {
+    private DeathMessageUtils() {}
+
     private static final Style INTENTIONAL_GAME_DESIGN_STYLE = Style.EMPTY
             .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://bugs.mojang.com/browse/MCPE-28723")))
             .withHoverEvent(new HoverEvent.ShowText(Component.literal("MCPE-28723")));

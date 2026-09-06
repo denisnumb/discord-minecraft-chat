@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 import static com.denisnumb.discord_chat_mod.config.ConfigComments.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 
-public class LogsConfig {
+public final class LogsConfig {
+    private LogsConfig() {}
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static boolean logDiscordMessages;

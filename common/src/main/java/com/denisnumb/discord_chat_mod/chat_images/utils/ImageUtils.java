@@ -17,7 +17,9 @@ import java.net.URISyntaxException;
 
 import static com.denisnumb.discord_chat_mod.chat_images.ImageStorage.*;
 
-public class ImageUtils {
+public final class ImageUtils {
+    private ImageUtils() {}
+
     public static final String SPOILER_PREFIX = "/SPOILER_";
     public static final String LOCAL_RESOURCE_PREFIX = "https://localResource/";
 

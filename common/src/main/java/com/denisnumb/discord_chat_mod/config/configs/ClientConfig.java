@@ -5,7 +5,9 @@ import com.electronwill.nightconfig.core.CommentedConfig;
 import static com.denisnumb.discord_chat_mod.config.ConfigComments.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 
-public class ClientConfig {
+public final class ClientConfig {
+    private ClientConfig() {}
+
     public static boolean emojifulCompatibility;
     public static int maxChatHistory;
     public static int maxImageCacheSize;

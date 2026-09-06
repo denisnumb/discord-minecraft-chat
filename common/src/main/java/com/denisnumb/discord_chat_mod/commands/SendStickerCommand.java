@@ -29,7 +29,9 @@ import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyle
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.getDiscordMessageComponents;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.MESSAGE;
 
-public class SendStickerCommand {
+public final class SendStickerCommand {
+    private SendStickerCommand() {}
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("send_sticker")

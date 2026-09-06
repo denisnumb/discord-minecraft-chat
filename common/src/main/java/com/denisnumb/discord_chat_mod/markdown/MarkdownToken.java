@@ -4,7 +4,7 @@ import java.util.List;
 
 import static com.denisnumb.discord_chat_mod.utils.ColorUtils.getHexColor;
 
-public class MarkdownToken {
+public final class MarkdownToken {
     public String rawText;
     public String text;
     public String url = null;

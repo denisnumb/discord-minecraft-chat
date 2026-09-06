@@ -16,7 +16,9 @@ import net.minecraft.network.chat.MutableComponent;
 
 import java.io.File;
 
-public class MinecraftClientEvents {
+public final class MinecraftClientEvents {
+    private MinecraftClientEvents() {}
+
     public static Component handleScreenshot(File screenshotFile){
         Component screenshotName = Component.literal(screenshotFile.getName())
                 .withStyle(ChatFormatting.UNDERLINE)

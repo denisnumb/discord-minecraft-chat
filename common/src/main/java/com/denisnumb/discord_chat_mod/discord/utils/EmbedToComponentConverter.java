@@ -27,6 +27,8 @@ import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.CHAT_LINK_CO
 import static com.denisnumb.discord_chat_mod.utils.ColorUtils.Color.DISCORD_DEFAULT_COLOR;
 
 public final class EmbedToComponentConverter {
+    private EmbedToComponentConverter() {}
+
     private static final int EMBED_LINE_MAX_LENGTH = 45;
     private static final String BORDER_TOP_PREFIX = "┌─── ";
     private static final String BORDER_TOP_PLAIN = "┌───────";

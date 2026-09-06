@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class FlowButtonLayout {
-    private FlowButtonLayout() {
-    }
+    private FlowButtonLayout() {}
 
-    public record ButtonSlot(int x, int y, int width, int height) {
-    }
+    public record ButtonSlot(int x, int y, int width, int height) {}
 
     public static List<ButtonSlot> compute(
             int itemCount,

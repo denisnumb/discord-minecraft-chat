@@ -13,7 +13,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class WebpUtils {
+public final class WebpUtils {
+    private WebpUtils() {}
+
     public record FrameMetadata(int xOffset, int yOffset, int width, int height) { }
 
     private static int readLittleEndian3Bytes(byte[] data, int offset) {

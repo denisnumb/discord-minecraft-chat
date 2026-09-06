@@ -20,7 +20,9 @@ import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.
 import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 import static com.denisnumb.discord_chat_mod.utils.JavaUtils.newLinkedHashMapOf;
 
-public class MinecraftChatStyleProvider {
+public final class MinecraftChatStyleProvider {
+    private MinecraftChatStyleProvider() {}
+
     private static Component applyStyleToAdvancement(Component translatableTitle, Component translatableDescription, Style advancementStyle) {
         Component description = ComponentUtils.mergeStyles(translatableTitle.copy(), Style.EMPTY.withColor(advancementStyle.getColor()))
                 .append("\n")

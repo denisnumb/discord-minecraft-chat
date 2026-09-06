@@ -19,7 +19,9 @@ import java.util.stream.IntStream;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.isDiscordConnected;
 
-public class StickersProvider {
+public final class StickersProvider {
+    private StickersProvider() {}
+
     public record StickerData(String imageUrl, String discordId, String originalName) {}
     public static Map<String, AbstractImage> CLIENT_STICKER_CACHE = new HashMap<>();
     private static long lastGetNameToRawStickerMapGet = 0;

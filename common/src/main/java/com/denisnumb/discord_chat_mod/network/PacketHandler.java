@@ -11,7 +11,9 @@ import com.denisnumb.discord_chat_mod.network.sticker.DiscordStickersTransceiver
 import net.minecraft.server.level.ServerPlayer;
 
 
-public class PacketHandler {
+public final class PacketHandler {
+    private PacketHandler() {}
+
     public static void handleDiscordStickersPacket(final DiscordStickersPartPacket data) {
         DiscordStickersTransceiver.receiveDiscordStickersPart(data);
     }

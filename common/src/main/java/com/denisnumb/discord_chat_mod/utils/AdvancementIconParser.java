@@ -20,7 +20,9 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Optional;
 
-public class AdvancementIconParser {
+public final class AdvancementIconParser {
+    private AdvancementIconParser() {}
+
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Gson GSON = new Gson();
 

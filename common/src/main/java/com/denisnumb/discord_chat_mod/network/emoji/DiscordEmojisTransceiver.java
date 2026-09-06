@@ -17,7 +17,9 @@ import java.util.Map;
 
 import static com.denisnumb.discord_chat_mod.discord.data_providers.CustomEmojiProvider.loadClient;
 
-public class DiscordEmojisTransceiver {
+public final class DiscordEmojisTransceiver {
+    private DiscordEmojisTransceiver() {}
+
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Map<Long, ArrayList<byte[]>> receivedParts = new HashMap<>();
     private static final Gson gson = new Gson();

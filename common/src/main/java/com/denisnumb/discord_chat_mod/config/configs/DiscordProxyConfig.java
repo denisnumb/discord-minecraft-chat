@@ -7,7 +7,9 @@ import static com.denisnumb.discord_chat_mod.config.ConfigComments.PROXY_USER_CO
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.PROXY_PASSWORD_DEFAULT;
 
-public class DiscordProxyConfig {
+public final class DiscordProxyConfig {
+    private DiscordProxyConfig() {}
+
     public static String proxyHostname;
     public static int proxyPort;
     public static String proxyUser;

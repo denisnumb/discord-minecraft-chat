@@ -5,7 +5,9 @@ import java.util.List;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.*;
 
-public class ConfigDefaults {
+public final class ConfigDefaults {
+    private ConfigDefaults() {}
+
     public static final String DISCORD_BOT_TOKEN_DEFAULT = "";
     public static final String MOD_LOCALE_DEFAULT = "en_us";
     public static final int UTC_OFFSET_HOURS_DEFAULT = 0;

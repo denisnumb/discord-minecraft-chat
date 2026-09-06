@@ -27,7 +27,9 @@ import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.getDiscordMessageComponents;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.MESSAGE;
 
-public class TellrawCommand {
+public final class TellrawCommand {
+    private TellrawCommand() {}
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context){
         dispatcher.register(
                 Commands.literal("tellraw")

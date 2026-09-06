@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class SlashCommandPermissionUtils {
+    private SlashCommandPermissionUtils() {}
+
     public static SlashCommandPermissions getMemberPermissions(Member member) {
         List<SlashCommandPermissions> effectivePerms = getEffectivePermissions(member);
 

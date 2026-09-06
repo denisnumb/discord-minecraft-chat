@@ -18,7 +18,9 @@ import static com.denisnumb.discord_chat_mod.config.configs.LogsConfig.loadLogsC
 import static com.denisnumb.discord_chat_mod.config.configs.MinecraftChatStyleConfig.loadMinecraftChatStyleConfig;
 import static com.denisnumb.discord_chat_mod.config.configs.WebhookModeConfig.loadWebhookModeConfig;
 
-public class ConfigManager {
+public final class ConfigManager {
+    private ConfigManager() {}
+
     private static final String CONFIG_DIR_NAME = "config";
     private static final String COMMON_PATH = "discord_chat_mod-common.toml";
     private static final String CLIENT_PATH = "discord_chat_mod-client.toml";

@@ -11,7 +11,8 @@ import static com.denisnumb.discord_chat_mod.utils.ColorUtils.parseColor;
 import static com.denisnumb.discord_chat_mod.config.ConfigComments.*;
 import static com.denisnumb.discord_chat_mod.config.ConfigDefaults.*;
 
-public class MinecraftChatStyleConfig {
+public final class MinecraftChatStyleConfig {
+    private MinecraftChatStyleConfig() {}
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static boolean enableMinecraftChatCustomization;

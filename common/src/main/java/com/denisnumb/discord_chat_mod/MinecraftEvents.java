@@ -37,7 +37,9 @@ import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyle
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.utils.JavaUtils.mergeMaps;
 
-public class MinecraftEvents {
+public final class MinecraftEvents {
+    private MinecraftEvents() {}
+
     public static void handleRegisterCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         MentionCommand.register(dispatcher);
         SendStickerCommand.register(dispatcher);
