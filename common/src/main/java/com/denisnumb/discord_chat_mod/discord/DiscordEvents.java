@@ -1,5 +1,6 @@
 package com.denisnumb.discord_chat_mod.discord;
 
+import com.denisnumb.discord_chat_mod.discord.model.WebhookPayload;
 import com.denisnumb.discord_chat_mod.utils.ColorUtils;
 import com.denisnumb.discord_chat_mod.utils.EmojiUtils;
 import com.denisnumb.discord_chat_mod.utils.JavaUtils;
@@ -11,7 +12,6 @@ import com.denisnumb.discord_chat_mod.discord.model.DiscordGuildContext;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordMentionData;
 import com.denisnumb.discord_chat_mod.discord.utils.DiscordMentionsUtils;
 import com.denisnumb.discord_chat_mod.discord.utils.EmbedToComponentConverter;
-import com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils;
 import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
 import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
@@ -40,7 +40,7 @@ import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.parseConf
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordUrlsUtils.retrieveMessageEmbedUrls;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;
-import static com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils.sendWebhookWithFiles;
+import static com.denisnumb.discord_chat_mod.discord.utils.DiscordWebhookUtils.sendWebhookWithFiles;
 
 public class DiscordEvents extends ListenerAdapter {
     @Override
@@ -70,18 +70,18 @@ public class DiscordEvents extends ListenerAdapter {
         List<MessageEmbed> embeds = event.getMessage().getEmbeds();
         MessageEmbed embed = embeds.isEmpty() ? null : event.getMessage().getEmbeds().getFirst();
 
-        List<WebhookUtils.WebhookAttachment> attachments = new ArrayList<>();
+        List<WebhookPayload.WebhookAttachment> attachments = new ArrayList<>();
 
         for (Message.Attachment attachment : event.getMessage().getAttachments()) {
             try {
-                attachments.add(new WebhookUtils.WebhookAttachment(JavaUtils.getInputStreamFromUrl(attachment.getUrl()).readAllBytes(), attachment.getFileName()));
+                attachments.add(new WebhookPayload.WebhookAttachment(JavaUtils.getInputStreamFromUrl(attachment.getUrl()).readAllBytes(), attachment.getFileName()));
             } catch (Exception ignored) {}
         }
 
         if (attachments.size() < 10 && !event.getMessage().getStickers().isEmpty()){
             StickerItem sticker = event.getMessage().getStickers().getFirst();
             try {
-                attachments.add(new WebhookUtils.WebhookAttachment(
+                attachments.add(new WebhookPayload.WebhookAttachment(
                         JavaUtils.getInputStreamFromUrl(sticker.getIconUrl()).readAllBytes(),
                         getStickerFileName(sticker.getIconUrl())
                 ));
@@ -99,9 +99,9 @@ public class DiscordEvents extends ListenerAdapter {
                 webhook -> {
                     sendWebhookWithFiles(
                             webhook.getUrl(),
-                            new WebhookUtils.WebhookPayload(messageContent, embed)
-                                    .setAvatarUrl(event.getAuthor().getAvatarUrl())
-                                    .setUsername(userName),
+                            new WebhookPayload(messageContent, embed)
+                                    .withAvatarUrl(event.getAuthor().getAvatarUrl())
+                                    .withUsername(userName),
                             attachments
                     );
                 },
@@ -116,7 +116,7 @@ public class DiscordEvents extends ListenerAdapter {
                                         : Optional.of(embed)
                             )
                     ).ifPresent(mca -> {
-                        for (WebhookUtils.WebhookAttachment attachment : attachments)
+                        for (WebhookPayload.WebhookAttachment attachment : attachments)
                             mca.addFiles(FileUpload.fromData(attachment.data(), attachment.fileName()));
                         sendDiscordMessage(mca, guildContext.defaultChannel, false);
                     });

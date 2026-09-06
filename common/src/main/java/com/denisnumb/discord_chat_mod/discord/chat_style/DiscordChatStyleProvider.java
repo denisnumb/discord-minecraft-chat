@@ -4,9 +4,9 @@ import com.denisnumb.discord_chat_mod.utils.ColorUtils;
 import com.denisnumb.discord_chat_mod.utils.DeathMessageUtils;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.config.IConfigProvider;
-import com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils;
 import com.denisnumb.discord_chat_mod.locale.DiscordLocaleProvider;
 import com.denisnumb.discord_chat_mod.utils.JavaUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
@@ -130,7 +130,7 @@ public class DiscordChatStyleProvider {
         HashMap<String, String> result = new HashMap<>();
         result.put(PLAYER, displayName);
         if (entity instanceof Player player)
-            result.put(PLAYER_AVATAR_URL, WebhookUtils.getPlayerAvatarUrl(player));
+            result.put(PLAYER_AVATAR_URL, MinecraftUtils.getPlayerAvatarUrl(player));
         else
             result.put(PLAYER_AVATAR_URL, ConfigProvider.getConfig().webhookServerAvatarUrl());
 

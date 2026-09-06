@@ -4,8 +4,10 @@ import com.denisnumb.discord_chat_mod.MinecraftEvents;
 import com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils;
 import com.denisnumb.discord_chat_mod.chat_style.CustomChatTypeRegistry;
 import com.denisnumb.discord_chat_mod.chat_style.MinecraftChatStyleProvider;
+import com.denisnumb.discord_chat_mod.commands.set_avatar.AvatarUrlStorage;
 import com.denisnumb.discord_chat_mod.config.ConfigDefaults;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
+import com.denisnumb.discord_chat_mod.config.IConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordUserData;
@@ -13,6 +15,9 @@ import com.denisnumb.discord_chat_mod.discord.model.DiscordMentionData;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownParser;
 import com.denisnumb.discord_chat_mod.markdown.MarkdownToComponentConverter;
 import com.denisnumb.discord_chat_mod.markdown.MinecraftFormattingConverter;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.properties.Property;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
@@ -28,17 +33,26 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import com.denisnumb.discord_chat_mod.compat.VanishCompatProvider;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.isDiscordConnected;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.server;
+import static com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils.getMimeType;
+import static com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils.isImageUrl;
 import static com.denisnumb.discord_chat_mod.chat_style.ChatStyleUtils.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.*;
 import static com.denisnumb.discord_chat_mod.chat_style.Parameters.Translatable.*;
@@ -293,6 +307,89 @@ public class MinecraftUtils {
 
     public static void showTitleBarMessage(Component message) {
         Minecraft.getInstance().gui.setOverlayMessage(message, false);
+    }
+
+    public static String getPlayerAvatarUrl(Player player){
+        IConfigProvider config = ConfigProvider.getConfig();
+
+        if (config.isSetAvatarUrlCommandEnabled()){
+            String customAvatarUrl = AvatarUrlStorage.getUrl(player);
+            if (customAvatarUrl != null)
+                return customAvatarUrl;
+        }
+
+        String avatarUrlTemplate = config.webhookPlayerAvatarUrl();
+        String defaultAvatarUrl = config.webhookPlayerDefaultAvatarUrl();
+        String playerName = player.getName().getString();
+
+        avatarUrlTemplate = avatarUrlTemplate.replace("<name>", playerName);
+
+        if (avatarUrlTemplate.contains("<uuid>")){
+            Optional<String> optionalUUID = MinecraftUtils.getUUIDFromMojangAPI(playerName);
+            if (optionalUUID.isPresent())
+                avatarUrlTemplate = avatarUrlTemplate.replace("<uuid>", optionalUUID.get());
+        }
+
+        if (avatarUrlTemplate.contains("<texture>")){
+            Optional<String> optionalTexture = MinecraftUtils.getPlayerTextureHash(player);
+            if (optionalTexture.isPresent())
+                avatarUrlTemplate = avatarUrlTemplate.replace("<texture>", optionalTexture.get());
+        }
+
+        if (isImageUrl(getMimeType(avatarUrlTemplate)))
+            return avatarUrlTemplate;
+
+        return isImageUrl(getMimeType(defaultAvatarUrl))
+                ? defaultAvatarUrl
+                : "https://mc-heads.net/avatar/steve_head_png";
+    }
+
+    private static Optional<String> getPlayerTextureHash(Player player) {
+        try {
+            Collection<Property> textures = player.getGameProfile().properties().get("textures");
+            if (textures.isEmpty())
+                return Optional.empty();
+
+            String encoded = textures.iterator().next().value();
+            String decoded = new String(Base64.getDecoder().decode(encoded), StandardCharsets.UTF_8);
+            JsonObject json = JsonParser.parseString(decoded).getAsJsonObject();
+            if (!json.has("textures"))
+                return Optional.empty();
+
+            JsonObject texturesObject = json.getAsJsonObject("textures");
+            if (!texturesObject.has("SKIN"))
+                return Optional.empty();
+
+            String skinUrl = texturesObject.getAsJsonObject("SKIN").get("url").getAsString();
+            int slashIndex = skinUrl.lastIndexOf('/');
+            if (slashIndex < 0 || slashIndex == skinUrl.length() - 1)
+                return Optional.empty();
+
+            return Optional.of(skinUrl.substring(slashIndex + 1));
+        } catch (Exception ignored) {}
+
+        return Optional.empty();
+    }
+
+    private static Optional<String> getUUIDFromMojangAPI(String username) {
+        try {
+            URL url = new URI("https://api.mojang.com/users/profiles/minecraft/" + username).toURL();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null)
+                response.append(inputLine);
+            in.close();
+
+            JsonObject json = JsonParser.parseString(response.toString()).getAsJsonObject();
+            return Optional.of(json.get("id").getAsString());
+        } catch (Exception ignored){}
+
+        return Optional.empty();
     }
 
     public static void logErrorToServer(Component message) {

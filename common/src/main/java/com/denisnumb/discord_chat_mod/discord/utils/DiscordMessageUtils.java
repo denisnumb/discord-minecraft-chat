@@ -3,8 +3,10 @@ package com.denisnumb.discord_chat_mod.discord.utils;
 import com.denisnumb.discord_chat_mod.discord.data_providers.StickersProvider;
 import com.denisnumb.discord_chat_mod.discord.model.ChannelCategory;
 import com.denisnumb.discord_chat_mod.discord.model.DiscordGuildContext;
+import com.denisnumb.discord_chat_mod.discord.model.WebhookPayload;
 import com.denisnumb.discord_chat_mod.locale.MinecraftLocaleProvider;
 import com.denisnumb.discord_chat_mod.utils.JavaUtils;
+import com.denisnumb.discord_chat_mod.utils.MinecraftUtils;
 import com.mojang.logging.LogUtils;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Webhook;
@@ -25,7 +27,7 @@ import java.util.concurrent.Executors;
 import static com.denisnumb.discord_chat_mod.DiscordChatMod.*;
 import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.logErrorToServer;
 import static com.denisnumb.discord_chat_mod.discord.DiscordChannelRegistry.*;
-import static com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils.*;
+import static com.denisnumb.discord_chat_mod.discord.utils.DiscordWebhookUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 
 
@@ -104,9 +106,9 @@ public class DiscordMessageUtils {
 
                 return sendWebhookWithImage(
                         optionalWebhook.get().getUrl(),
-                        payload.setUsername(player.getDisplayName().getString())
-                                .setAvatarUrl(getPlayerAvatarUrl(player)),
-                        new WebhookAttachment(imageData.data(), imageData.fileName())
+                        payload.withUsername(player.getDisplayName().getString())
+                                .withAvatarUrl(MinecraftUtils.getPlayerAvatarUrl(player)),
+                        new WebhookPayload.WebhookAttachment(imageData.data(), imageData.fileName())
                 ).get();
             } catch (Exception ignored) {
                 return Optional.empty();
@@ -220,16 +222,16 @@ public class DiscordMessageUtils {
                 ? new WebhookPayload(components.getContent())
                 : new WebhookPayload(components.getEmbed());
 
-        payload.setUsername(player != null
+        payload.withUsername(player != null
                 ? player.getDisplayName().getString()
                 : getWebhookServerName()
         );
 
         if (player != null)
-            payload.setAvatarUrl(getPlayerAvatarUrl(player));
+            payload.withAvatarUrl(MinecraftUtils.getPlayerAvatarUrl(player));
 
         if (imageData != null)
-            sendWebhookWithImage(webhookUrl, payload, new WebhookAttachment(imageData.data, imageData.fileName));
+            sendWebhookWithImage(webhookUrl, payload, new WebhookPayload.WebhookAttachment(imageData.data, imageData.fileName));
         else
             sendWebhook(webhookUrl, () -> payload);
     }

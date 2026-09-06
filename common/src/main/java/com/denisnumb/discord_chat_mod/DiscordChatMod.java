@@ -40,8 +40,8 @@ import static com.denisnumb.discord_chat_mod.utils.MinecraftUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.utils.DiscordMessageUtils.*;
 import static com.denisnumb.discord_chat_mod.discord.ServerStatusController.initServerStatusController;
 import static com.denisnumb.discord_chat_mod.discord.ServerStatusController.updateServerStatusMessageToUnavailable;
-import static com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils.initWebhookSendExecutor;
-import static com.denisnumb.discord_chat_mod.discord.utils.WebhookUtils.stopWebhookSendExecutor;
+import static com.denisnumb.discord_chat_mod.discord.utils.DiscordWebhookUtils.initWebhookSendExecutor;
+import static com.denisnumb.discord_chat_mod.discord.utils.DiscordWebhookUtils.stopWebhookSendExecutor;
 import static com.denisnumb.discord_chat_mod.discord.chat_style.DiscordChatStyleProvider.*;
 import com.denisnumb.discord_chat_mod.discord.slash_commands.DiscordSlashCommands;
 
