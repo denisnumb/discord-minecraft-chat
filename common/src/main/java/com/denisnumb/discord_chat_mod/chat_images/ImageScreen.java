@@ -1,8 +1,6 @@
 package com.denisnumb.discord_chat_mod.chat_images;
 
 import com.denisnumb.discord_chat_mod.chat_images.model.AbstractImage;
-import com.denisnumb.discord_chat_mod.chat_images.model.AnimatedImage;
-import com.denisnumb.discord_chat_mod.chat_images.model.Image;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -10,7 +8,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class ImageScreen extends Screen {
@@ -47,11 +44,7 @@ public class ImageScreen extends Screen {
         centerX = (this.width - renderWidth) / 2;
         centerY = (this.height - renderHeight) / 2;
 
-        Identifier resourceLocation = image instanceof AnimatedImage gif
-                ? gif.getCurrentFrame()
-                : ((Image) image).resourceLocation;
-
-        graphics.blit(RenderPipelines.GUI_TEXTURED, resourceLocation,
+        graphics.blit(RenderPipelines.GUI_TEXTURED, image.getRenderFrame(),
                 centerX, centerY,
                 0, 0,
                 renderWidth, renderHeight,

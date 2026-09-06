@@ -2,8 +2,6 @@ package com.denisnumb.discord_chat_mod.mixin;
 
 import com.denisnumb.discord_chat_mod.utils.ColorUtils;
 import com.denisnumb.discord_chat_mod.chat_images.model.AbstractImage;
-import com.denisnumb.discord_chat_mod.chat_images.model.AnimatedImage;
-import com.denisnumb.discord_chat_mod.chat_images.model.Image;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.ChannelMembersProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.CustomEmojiProvider;
@@ -98,11 +96,8 @@ public abstract class CommandSuggestionsMixin {
         if (image == null)
             return;
 
-        Identifier imageLocation = image instanceof AnimatedImage animatedImage
-                ? animatedImage.getCurrentFrame()
-                : ((Image) image).resourceLocation;
-
-        if (imageLocation == null)
+        Identifier renderFrame = image.getRenderFrame();
+        if (renderFrame == null)
             return;
 
         int boxSize = 75;
@@ -112,7 +107,7 @@ public abstract class CommandSuggestionsMixin {
         guiGraphics.fill(boxX, boxY, boxX + boxSize, boxY + boxSize, fillColor);
 
         guiGraphics.blit(
-                RenderPipelines.GUI_TEXTURED, imageLocation,
+                RenderPipelines.GUI_TEXTURED, renderFrame,
                 boxX + 2, boxY + 2,
                 0, 0,
                 boxSize - 4, boxSize - 4,

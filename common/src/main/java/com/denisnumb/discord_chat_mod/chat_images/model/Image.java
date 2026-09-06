@@ -16,4 +16,9 @@ public class Image extends AbstractImage {
         super(url, imageSize, originalSize, isSpoiler, spoilerIdentifier);
         this.resourceLocation = resourceLocation;
     }
+
+    @Override
+    public Identifier getRenderFrame() {
+        return this.resourceLocation;
+    }
 }

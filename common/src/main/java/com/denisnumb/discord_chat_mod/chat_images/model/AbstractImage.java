@@ -24,6 +24,8 @@ public abstract class AbstractImage {
         this.spoilerIdentifier = spoilerIdentifier;
     }
 
+    public abstract Identifier getRenderFrame();
+
     public boolean isSpoilerAndNotOpened(){
         return isSpoiler && !isSpoilerOpened;
     }

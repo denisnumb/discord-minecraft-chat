@@ -1,8 +1,6 @@
 package com.denisnumb.discord_chat_mod.chat_images;
 
 import com.denisnumb.discord_chat_mod.chat_images.model.AbstractImage;
-import com.denisnumb.discord_chat_mod.chat_images.model.AnimatedImage;
-import com.denisnumb.discord_chat_mod.chat_images.model.Image;
 import com.denisnumb.discord_chat_mod.chat_images.widgets.FlowButtonLayout;
 import com.denisnumb.discord_chat_mod.chat_images.widgets.FlowButtonLayout.ButtonSlot;
 import com.denisnumb.discord_chat_mod.chat_images.utils.ImageUtils;
@@ -22,7 +20,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
@@ -184,11 +181,7 @@ public class ImageSendScreen extends Screen {
         int centerX = (this.width - renderWidth) / 2;
         int centerY = ((this.height - 60) - renderHeight) / 2;
 
-        Identifier resourceLocation = image instanceof AnimatedImage gif
-                ? gif.getCurrentFrame()
-                : ((Image) image).resourceLocation;
-
-        graphics.blit(RenderPipelines.GUI_TEXTURED, resourceLocation,
+        graphics.blit(RenderPipelines.GUI_TEXTURED, image.getRenderFrame(),
                 centerX, centerY, 0, 0,
                 renderWidth, renderHeight,
                 renderWidth, renderHeight

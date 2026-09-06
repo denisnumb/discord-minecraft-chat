@@ -1,8 +1,6 @@
 package com.denisnumb.discord_chat_mod.mixin;
 
 import com.denisnumb.discord_chat_mod.chat_images.model.AbstractImage;
-import com.denisnumb.discord_chat_mod.chat_images.model.AnimatedImage;
-import com.denisnumb.discord_chat_mod.chat_images.model.Image;
 import com.denisnumb.discord_chat_mod.config.ConfigProvider;
 import com.denisnumb.discord_chat_mod.discord.data_providers.CustomEmojiProvider;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -81,14 +79,8 @@ public abstract class GuiGraphicsMixin {
             AbstractImage abstractImage = CustomEmojiProvider.CLIENT_EMOJI_CACHE.get(matcher.group(1));
 
             if (abstractImage != null) {
-
-                Identifier emoji =
-                        abstractImage instanceof AnimatedImage gif
-                                ? gif.getCurrentFrame()
-                                : ((Image) abstractImage).resourceLocation;
-
                 int emojiSize = 9;
-                blit(RenderPipelines.GUI_TEXTURED, emoji, currentX, y - 1, 0, 0, emojiSize, emojiSize, emojiSize, emojiSize);
+                blit(RenderPipelines.GUI_TEXTURED, abstractImage.getRenderFrame(), currentX, y - 1, 0, 0, emojiSize, emojiSize, emojiSize, emojiSize);
                 result.add(FormattedCharSequence.codepoint(' ', Style.EMPTY)); // space for emoji; width = 4
                 result.add(FormattedCharSequence.codepoint(' ', Style.EMPTY.withBold(true))); // space for emoji; width = 5
                 currentX += emojiSize;

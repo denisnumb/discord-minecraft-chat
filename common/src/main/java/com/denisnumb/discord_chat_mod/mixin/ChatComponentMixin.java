@@ -326,9 +326,7 @@ public abstract class ChatComponentMixin {
 
             Identifier resourceLocation = abstractImage.isSpoilerAndNotOpened()
                     ? abstractImage.spoilerIdentifier
-                    : abstractImage instanceof AnimatedImage gif
-                    ? gif.getCurrentFrame()
-                    : ((Image) abstractImage).resourceLocation;
+                    : abstractImage.getRenderFrame();
 
             ImageSize imageSize = abstractImage.imageSize;
             int imageWidth = imageSize.width();

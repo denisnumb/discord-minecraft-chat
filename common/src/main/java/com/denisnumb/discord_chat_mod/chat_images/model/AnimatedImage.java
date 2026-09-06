@@ -22,7 +22,8 @@ public class AnimatedImage extends AbstractImage {
         this.frameDuration = frameDuration;
     }
 
-    public Identifier getCurrentFrame() {
+    @Override
+    public Identifier getRenderFrame() {
         long time = System.currentTimeMillis();
         int totalDuration = frames.size() * frameDuration;
         long timeInLoop = time % totalDuration;
